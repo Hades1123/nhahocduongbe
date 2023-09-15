@@ -1,30 +1,35 @@
 package vn.viettel.bvrhm.nhahocduong.api.system.security;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.entity.mapper.UserAuthDetailsMapper;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+@Data
+@NoArgsConstructor
 public class UserAuthDetails implements UserDetails, CredentialsContainer {
 
   private static final Logger logger = LoggerFactory.getLogger(UserAuthDetails.class);
 
-  private final String userId;
-  private final String username;
-  private final Set<GrantedAuthority> authorities;
-  private final boolean accountNonExpired;
-  private final boolean accountNonLocked;
-  private final boolean credentialsNonExpired;
-  private final boolean enabled;
+  private Long userId;
+  private String username;
+  private Set<GrantedAuthority> authorities;
+  private boolean accountNonExpired;
+  private boolean accountNonLocked;
+  private boolean credentialsNonExpired;
+  private boolean enabled;
   private String password;
 
   public UserAuthDetails(
-      String userId,
+      Long userId,
       String username,
       String password,
       Collection<? extends GrantedAuthority> authorities) {
@@ -32,7 +37,7 @@ public class UserAuthDetails implements UserDetails, CredentialsContainer {
   }
 
   public UserAuthDetails(
-      String userId,
+      Long userId,
       String username,
       String password,
       boolean accountNonExpired,
@@ -56,7 +61,7 @@ public class UserAuthDetails implements UserDetails, CredentialsContainer {
     return this.authorities;
   }
 
-  public String getUserId() {
+  public Long getUserId() {
     return this.userId;
   }
 

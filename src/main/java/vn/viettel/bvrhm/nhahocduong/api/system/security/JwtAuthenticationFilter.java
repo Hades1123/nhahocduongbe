@@ -10,18 +10,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import vn.viettel.bvrhm.nhahocduong.api.auth.JwtService;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.AuthenticationService;
 
 import java.io.IOException;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-  private JwtService jwtService;
-
   @Autowired
-  public JwtAuthenticationFilter(JwtService jwtService) {
-    this.jwtService = jwtService;
-  }
+  private JwtService jwtService;
+  @Autowired
+  private AuthenticationService authenticationService;
 
   @Override
   protected void doFilterInternal(
@@ -30,6 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     final String authHeader = request.getHeader("Authorization");
     final String jwtString;
     final String userId;
+    final String username;
 
     // No JWT in Authorization header -> continue down the chain
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -46,6 +48,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     userId = jwtService.extractUserId(jwtString);
+    username = jwtService.extractUsername(jwtString);
+
+    // User not existed
+    UserAuthDetails userAuthDetails = authenticationService.loadUserByUsername(username);
+    if (isNull(userAuthDetails)) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+
     // TODO extract roles
     // Option 1: get from JWT token => Use this for now
     // Option 2: load from database => Revise later

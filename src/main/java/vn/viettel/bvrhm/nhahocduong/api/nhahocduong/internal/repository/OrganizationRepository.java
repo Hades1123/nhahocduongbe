@@ -27,6 +27,13 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
   List<Organization> findAllByOrderByName();
 
   List<Organization> findByAreaCodeIn(List<String> areaCodes);
+
+  @Query("""
+    SELECT org
+    FROM Organization org
+    WHERE (:#{#areaCodes.size()} = 0 OR org.areaCode IN :areaCodes)
+      AND (:type IS NULL OR org.type = :type)
+  """)
   List<Organization> findByAreaCodeInAndType(List<String> areaCodes, OrganizationType type);
 
   // TODO: implement search

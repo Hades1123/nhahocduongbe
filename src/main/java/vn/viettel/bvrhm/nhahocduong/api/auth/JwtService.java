@@ -45,13 +45,8 @@ public class JwtService {
   }
 
   public String extractUsername(String token) {
-
     final Claims claims = extractAllClaims(token);
     return claims.get("username", String.class);
-  }
-
-  public String makeToken(UserDetails userDetails) {
-    return makeToken(new HashMap<>(), userDetails);
   }
 
   public String makeToken(Map<String, Object> extraClaims, UserDetails userDetails) {
@@ -78,6 +73,24 @@ public class JwtService {
             .addClaims(Map.of("roles", String.join(",", roles)))
             .signWith(getJwtSigningKey(), SignatureAlgorithm.HS256)
             .compact();
+
+    return token;
+  }
+
+  public String makeToken(Long userId, Map<String, Object> extraClaims) {
+    long currentEpoch = System.currentTimeMillis();
+    Date currentDate = new Date(currentEpoch);
+    Date expDate = new Date(currentEpoch + TOKEN_EXP_TIME_MILLIS);
+
+    String token =
+            Jwts.builder()
+                    .setSubject(String.valueOf(userId))
+                    .setIssuedAt(currentDate)
+                    .setNotBefore(currentDate)
+                    .setExpiration(expDate)
+                    .addClaims(extraClaims)
+                    .signWith(getJwtSigningKey(), SignatureAlgorithm.HS256)
+                    .compact();
 
     return token;
   }

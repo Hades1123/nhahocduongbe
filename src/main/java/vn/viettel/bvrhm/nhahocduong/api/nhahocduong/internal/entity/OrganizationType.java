@@ -7,8 +7,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @since: 14-Sep-23
  */
 public enum OrganizationType {
-    HEALTH_DEPARTMENT(1, "Sở y tế"),
-    SCHOOL(2, "Trường học");
+    SCHOOL(1, "Trường học"),
+
+    DEPARTMENT(2, "Sở"),
+    MINISTRY(3, "Bộ"),
+    HCMC_CENTRAL_DENTAL_HOSPITAL(4, "Bệnh viện Răng hàm mặt trung ương TP. Hồ Chí Minh");
 
     private Integer code;
     private String name;

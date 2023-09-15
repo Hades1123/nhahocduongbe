@@ -31,7 +31,7 @@ public class SecurityConfig {
                   .requestMatchers("/user/hello")
                   .authenticated()
                   .anyRequest()
-                  .permitAll();
+                  .authenticated();
             })
         // .authenticationProvider(jwtAuthenticationFilter)
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -39,7 +39,7 @@ public class SecurityConfig {
   }
 
   @Bean
-  public PasswordEncoder passwordEncoder() {
+  public static PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 }

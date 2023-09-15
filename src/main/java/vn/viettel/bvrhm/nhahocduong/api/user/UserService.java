@@ -17,17 +17,10 @@ public class UserService {
 
   private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-  private final PasswordEncoder passwordEncoder;
-  private final UserRepository userRepository;
-  private final UserMapper userMapper;
+  @Autowired private PasswordEncoder passwordEncoder;
+  @Autowired private UserRepository userRepository;
+  @Autowired private UserMapper userMapper;
 
-  @Autowired
-  public UserService(
-      UserMapper userMapper, UserRepository userRepository, PasswordEncoder passwordEncoder) {
-    this.userMapper = userMapper;
-    this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
-  }
 
   @Transactional
   public UserDTO createUser(UserDTO newUserDTO) throws Exception {
@@ -57,8 +50,12 @@ public class UserService {
 
   public UserDTO getUserById(Long userId) {
     User user = userRepository.getReferenceById(userId);
-    UserDTO userDTO = userMapper.userDTOFromUser(user);
-    return userDTO;
+    return userMapper.userDTOFromUser(user);
+  }
+
+  public UserDTO getUserByUsername(String username) {
+    User user = userRepository.getByUsername(username).orElseThrow();
+    return userMapper.userDTOFromUser(user);
   }
 
   public boolean checkValidUserIdPassword(Long userId, String inputPassword) {

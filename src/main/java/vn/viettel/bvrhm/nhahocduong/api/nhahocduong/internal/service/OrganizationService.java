@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.viettel.bvrhm.nhahocduong.api.common.AreaService;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.search.SearchOrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Organization;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Patient;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper.OrganizationMapper;
@@ -85,5 +86,16 @@ public class OrganizationService {
   public List<OrganizationDTO> getAll(){
 
     return organizationMapper.toDtoList(organizationRepository.findAllByOrderByName());
+  }
+
+  public List<OrganizationDTO> search(SearchOrganizationDTO searchCriteria) {
+    if (searchCriteria.getAreaCode() != null) {
+      if (areaService.getAreaByCode(searchCriteria.getAreaCode()) == null) {
+        return Collections.emptyList();
+      }
+    }
+    List<String> areaCodesInside = areaService.getChildrenAreaCode(searchCriteria.getAreaCode());
+
+    return organizationMapper.toDtoList(organizationRepository.findByAreaCodeInAndType(areaCodesInside, searchCriteria.getType()));
   }
 }

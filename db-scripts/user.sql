@@ -9,6 +9,7 @@ CREATE TABLE USER_USER
     first_name   VARCHAR not null,
     last_name    varchar not null,
     birthdate    date,
+    organization bigint,
     created_date date default now(),
     updated_date date,
     deleted_date date

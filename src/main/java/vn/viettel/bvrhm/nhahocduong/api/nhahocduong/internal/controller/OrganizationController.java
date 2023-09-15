@@ -3,6 +3,7 @@ package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.search.SearchOrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.OrganizationService;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/organization")
-public class OrganizationControler {
+public class OrganizationController {
     @Autowired
     private OrganizationService organizationService;
 
@@ -20,9 +21,9 @@ public class OrganizationControler {
     }
     @GetMapping("/search")
     public List<OrganizationDTO> search(
-      @RequestParam(name = "areaCode", required = false) String areaCode
+        SearchOrganizationDTO searchCriteria
     ) {
-        return organizationService.getByAreaCode(areaCode);
+        return organizationService.search(searchCriteria);
     }
     @GetMapping("")
     public List<OrganizationDTO> getByCondition(@RequestParam(required = false) String name){

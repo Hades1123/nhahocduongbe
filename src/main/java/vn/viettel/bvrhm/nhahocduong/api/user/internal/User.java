@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Organization;
 
 import java.time.LocalDate;
 
@@ -43,6 +44,10 @@ public class User {
 
   @Column(name = "birthdate")
   private LocalDate birthdate;
+
+  @ManyToOne
+  @JoinColumn(name = "organization")
+  private Organization organization;
 
   @Column(name = "created_date")
   private LocalDate createdDate;

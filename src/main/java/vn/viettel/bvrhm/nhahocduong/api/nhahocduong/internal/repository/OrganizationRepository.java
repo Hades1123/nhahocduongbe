@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Organization;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.OrganizationType;
 
 import java.util.List;
 
@@ -26,4 +27,8 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
   List<Organization> findAllByOrderByName();
 
   List<Organization> findByAreaCodeIn(List<String> areaCodes);
+  List<Organization> findByAreaCodeInAndType(List<String> areaCodes, OrganizationType type);
+
+  // TODO: implement search
+//  List<Organization> findByCriteria();
 }

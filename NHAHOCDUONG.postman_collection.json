@@ -725,7 +725,7 @@
 												"method": "GET",
 												"header": [],
 												"url": {
-													"raw": "{{server}}/api/patient/all?searchText=&organizationName&page=0&size=20",
+													"raw": "{{server}}/api/patient/all?areaCode=29683&page=0&size=20",
 													"host": [
 														"{{server}}"
 													],
@@ -737,11 +737,17 @@
 													"query": [
 														{
 															"key": "searchText",
-															"value": ""
+															"value": "",
+															"disabled": true
 														},
 														{
 															"key": "organizationName",
-															"value": null
+															"value": null,
+															"disabled": true
+														},
+														{
+															"key": "areaCode",
+															"value": "29683"
 														},
 														{
 															"key": "schoolClass",
@@ -2354,6 +2360,105 @@
 									"response": []
 								}
 							]
+						}
+					]
+				},
+				{
+					"name": "common",
+					"item": [
+						{
+							"name": "Get Provinces",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{server}}/api/areas/lookup?region=north",
+									"host": [
+										"{{server}}"
+									],
+									"path": [
+										"api",
+										"areas",
+										"lookup"
+									],
+									"query": [
+										{
+											"key": "region",
+											"value": "north"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Province By Code",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{server}}/api/areas/23685",
+									"host": [
+										"{{server}}"
+									],
+									"path": [
+										"api",
+										"areas",
+										"23685"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Precincts By Province Code And District Code",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{server}}/api/areas/lookup?region=north",
+									"host": [
+										"{{server}}"
+									],
+									"path": [
+										"api",
+										"areas",
+										"lookup"
+									],
+									"query": [
+										{
+											"key": "region",
+											"value": "north"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Districts By Province Code Copy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{server}}/api/areas/lookup?region=north",
+									"host": [
+										"{{server}}"
+									],
+									"path": [
+										"api",
+										"areas",
+										"lookup"
+									],
+									"query": [
+										{
+											"key": "region",
+											"value": "north"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}

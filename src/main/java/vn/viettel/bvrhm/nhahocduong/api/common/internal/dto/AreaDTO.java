@@ -1,4 +1,4 @@
-package vn.viettel.bvrhm.nhahocduong.api.common;
+package vn.viettel.bvrhm.nhahocduong.api.common.internal.dto;
 
 import jakarta.validation.constraints.NotNull;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.entity.Area;

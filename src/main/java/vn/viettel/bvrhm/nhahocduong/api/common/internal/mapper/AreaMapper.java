@@ -1,7 +1,7 @@
 package vn.viettel.bvrhm.nhahocduong.api.common.internal.mapper;
 
 import org.mapstruct.*;
-import vn.viettel.bvrhm.nhahocduong.api.common.AreaDTO;
+import vn.viettel.bvrhm.nhahocduong.api.common.internal.dto.AreaDTO;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.entity.Area;
 
 import java.util.List;

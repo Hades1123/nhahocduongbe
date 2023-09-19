@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
-import vn.viettel.bvrhm.nhahocduong.api.system.security.UserAuthDetails;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.object.UserAuthDetails;
 import vn.viettel.bvrhm.nhahocduong.api.user.UserDTO;
 
 @Mapper(

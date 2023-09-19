@@ -1,4 +1,4 @@
-package vn.viettel.bvrhm.nhahocduong.api.auth.internal;
+package vn.viettel.bvrhm.nhahocduong.api.auth.internal.service;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;

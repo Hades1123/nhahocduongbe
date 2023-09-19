@@ -1,4 +1,4 @@
-package vn.viettel.bvrhm.nhahocduong.api.system.security;
+package vn.viettel.bvrhm.nhahocduong.api.auth.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,8 +9,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import vn.viettel.bvrhm.nhahocduong.api.auth.JwtService;
-import vn.viettel.bvrhm.nhahocduong.api.auth.internal.AuthenticationService;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.object.AuthenticationToken;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.object.Authority;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.JwtService;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthenticationService;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.object.UserAuthDetails;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package vn.viettel.bvrhm.nhahocduong.api.system.security;
+package vn.viettel.bvrhm.nhahocduong.api.auth.internal.object;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import vn.viettel.bvrhm.nhahocduong.api.auth.internal.entity.mapper.UserAuthDetailsMapper;
 
 import java.util.Collection;
 import java.util.Collections;

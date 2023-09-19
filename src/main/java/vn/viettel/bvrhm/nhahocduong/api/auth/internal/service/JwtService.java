@@ -1,4 +1,4 @@
-package vn.viettel.bvrhm.nhahocduong.api.auth;
+package vn.viettel.bvrhm.nhahocduong.api.auth.internal.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

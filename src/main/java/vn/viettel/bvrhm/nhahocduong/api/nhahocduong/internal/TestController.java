@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import vn.viettel.bvrhm.nhahocduong.api.common.AreaService;
+import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.TeethRecordDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.*;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper.TeethRecordMapper;

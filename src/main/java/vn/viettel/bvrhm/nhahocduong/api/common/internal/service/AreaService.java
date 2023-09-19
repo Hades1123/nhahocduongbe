@@ -1,16 +1,15 @@
-package vn.viettel.bvrhm.nhahocduong.api.common;
+package vn.viettel.bvrhm.nhahocduong.api.common.internal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vn.viettel.bvrhm.nhahocduong.api.common.internal.dto.AreaDTO;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.dto.AreaLookupDTO;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.entity.Area;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.entity.AreaType;
-import vn.viettel.bvrhm.nhahocduong.api.common.internal.entity.Region;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.mapper.AreaMapper;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.repository.AreaRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AreaService {

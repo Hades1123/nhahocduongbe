@@ -1,4 +1,4 @@
-package vn.viettel.bvrhm.nhahocduong.api.auth.internal;
+package vn.viettel.bvrhm.nhahocduong.api.auth.internal.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,13 +6,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vn.viettel.bvrhm.nhahocduong.api.auth.JwtService;
 import vn.viettel.bvrhm.nhahocduong.api.auth.LoginRequest;
 import vn.viettel.bvrhm.nhahocduong.api.auth.LoginResponse;
 import vn.viettel.bvrhm.nhahocduong.api.auth.exception.InvalidCredentialException;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.object.UserAuthDetails;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.entity.mapper.UserAuthDetailsMapper;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.repository.UserPasswordRepository;
-import vn.viettel.bvrhm.nhahocduong.api.system.security.UserAuthDetails;
 import vn.viettel.bvrhm.nhahocduong.api.user.UserDTO;
 import vn.viettel.bvrhm.nhahocduong.api.user.UserService;
 

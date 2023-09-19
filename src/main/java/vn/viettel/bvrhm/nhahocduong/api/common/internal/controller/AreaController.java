@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import vn.viettel.bvrhm.nhahocduong.api.common.AreaDTO;
-import vn.viettel.bvrhm.nhahocduong.api.common.AreaService;
+import vn.viettel.bvrhm.nhahocduong.api.common.internal.dto.AreaDTO;
+import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.dto.AreaLookupDTO;
 
 import java.util.List;

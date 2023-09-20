@@ -56,7 +56,7 @@ public class UserService {
   }
 
   public UserDTO getUserByUsername(String username) throws NoSuchElementException {
-    User user = userRepository.getByUsername(username).orElseThrow();
+    User user = userRepository.getByUsername(username).orElseThrow(NoSuchElementException::new);
     return userMapper.userDTOFromUser(user);
   }
 

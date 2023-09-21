@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService.AuthorizationData;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
@@ -22,6 +23,7 @@ import vn.viettel.bvrhm.nhahocduong.api.user.internal.repository.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class PatientService {
@@ -111,5 +113,14 @@ public class PatientService {
     Page<Patient> patients = patientRepository.findAll(pageable);
 
     return patients.map(patientMapper::toDto);
+  }
+
+  public boolean deletePatientById(Long id) {
+    Patient patient = patientRepository.findById(id).orElseThrow(NoSuchElementException::new);
+
+    patient.setStatus(false);
+    patientRepository.save(patient);
+
+    return true;
   }
 }

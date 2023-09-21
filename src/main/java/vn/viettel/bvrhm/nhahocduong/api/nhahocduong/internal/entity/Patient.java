@@ -65,4 +65,7 @@ public class Patient {
 
   @Column(name = "care_taker")
   private String careTaker;
+
+  @Column(name = "status")
+  private Boolean status;
 }

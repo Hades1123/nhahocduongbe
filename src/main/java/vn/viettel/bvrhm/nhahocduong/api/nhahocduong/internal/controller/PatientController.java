@@ -45,6 +45,11 @@ public class PatientController {
     return dto;
   }
 
+  @DeleteMapping("/patient/{id}")
+  public boolean deletePatientById(@PathVariable Long id) {
+    return patientService.deletePatientById(id);
+  }
+
 //  @GetMapping("/patients/search/getByCondition")
 //  public List<PatientDTO> getPatientsByCondition(
 //      @RequestParam(name = "searchText",required = false) String searchText,

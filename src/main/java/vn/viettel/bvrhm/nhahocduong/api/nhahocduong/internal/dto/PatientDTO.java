@@ -16,10 +16,10 @@ public record PatientDTO(
         String areaType,
         String phoneNumber,
         String addressLine,
-
         List<DiseaseDTO> chronicConditions,
         OrganizationDTO organization,
         String schoolClass,
         String nationalIdNum,
-        String careTaker
+        String careTaker,
+        Boolean status
 ) implements Serializable {}

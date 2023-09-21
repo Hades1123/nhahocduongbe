@@ -22,10 +22,10 @@ public class JwtService {
       "6A586E3272357538782F413F4428472D4B6150645367566B5970337336763979";
 
   // 1000 miliseconds x 60 seconds x 60 minutes x 24 hours
-//  private static final long TOKEN_EXP_TIME_MILLIS = (long) (1000L * 60 * 60 * 24 * 30);
+  private static final long TOKEN_EXP_TIME_MILLIS = (long) (1000L * 60 * 60 * 24 * 30);
 
-  // 1000 miliseconds x 60 seconds x 3 min
-  private static final long TOKEN_EXP_TIME_MILLIS = 1000L * 60 * 5;
+  // 1000 miliseconds x 60 seconds x 5 min
+//  private static final long TOKEN_EXP_TIME_MILLIS = 1000L * 60 * 5;
 
   private Key getJwtSigningKey() {
     byte[] keyBytes = Decoders.BASE64.decode(JWT_SIGNING_KEY);

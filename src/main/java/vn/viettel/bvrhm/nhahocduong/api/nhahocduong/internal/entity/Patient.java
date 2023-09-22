@@ -22,6 +22,9 @@ public class Patient {
   @Column(name = "full_name")
   private String fullName;
 
+  @Column(name = "code")
+  private String code;
+
   @Column(name = "health_insurance_number")
   private String healthInsuranceNumber;
 

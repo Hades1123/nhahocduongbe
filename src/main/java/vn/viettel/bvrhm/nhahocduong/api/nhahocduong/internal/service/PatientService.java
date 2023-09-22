@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService.AuthorizationData;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.PatientDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.PatientSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Disease;
@@ -24,12 +28,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static java.util.Objects.nonNull;
+
 @Service
 public class PatientService {
 
   @Autowired
   AreaService areaService;
   @Autowired PatientRepository patientRepository;
+
+  @Autowired OrganizationService organizationService;
   @Autowired PatientMapper patientMapper;
   @Autowired DiseaseRepository diseaseRepository;
   @PersistenceContext EntityManager entityManager;
@@ -47,6 +55,7 @@ public class PatientService {
   @Transactional
   public PatientDTO createPatient(PatientDTO patientDTO) {
     var entity = patientMapper.toEntity(patientDTO);
+    entity.setCode(generateCode(patientDTO));
 
     patientRepository.saveAndFlush(entity);
     entityManager.refresh(entity);
@@ -121,5 +130,26 @@ public class PatientService {
     patientRepository.save(patient);
 
     return true;
+  }
+
+  private String generateCode(PatientDTO patientDTO) {
+    // Get org code
+    OrganizationDTO organization = organizationService.getOrganizationById(patientDTO.organization().getId());
+    if (organization == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Organization not found!");
+
+    StringBuilder codeBuilder = new StringBuilder();
+    codeBuilder.append(organization.getCode());
+
+    // Get latest patient code and increase 1, if not exist start with xxxyyy001
+    Patient latestPatient = patientRepository.findFirstByOrganizationCodeOrderByCodeDesc(organization.getCode());
+    int patientOrderNumber;
+    if (nonNull(latestPatient)) {
+      patientOrderNumber = Integer.parseInt(latestPatient.getCode().substring(6, 9));
+    } else {
+      patientOrderNumber = 0;
+    }
+    codeBuilder.append(String.format("%03d", patientOrderNumber + 1));
+
+    return codeBuilder.toString();
   }
 }

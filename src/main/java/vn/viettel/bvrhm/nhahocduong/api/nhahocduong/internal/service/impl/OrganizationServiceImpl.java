@@ -50,8 +50,7 @@ public class OrganizationServiceImpl implements OrganizationService {
   public OrganizationDTO createOrganization(OrganizationDTO organizationDTO) {
     var entity = organizationMapper.toEntity(organizationDTO);
 
-    String orgCode = generateOrgCode(organizationDTO);
-    entity.setCode(orgCode);
+    entity.setCode(generateCode(organizationDTO));
 
     organizationRepository.saveAndFlush(entity);
     entityManager.refresh(entity);
@@ -124,15 +123,15 @@ public class OrganizationServiceImpl implements OrganizationService {
     return organizations.map(organizationMapper::toDto);
   }
 
-  private String generateOrgCode(OrganizationDTO organizationDTO) {
+  private String generateCode(OrganizationDTO organizationDTO) {
     StringBuilder codeBuilder = new StringBuilder();
     codeBuilder.append(String.format("%03d", Integer.parseInt(organizationDTO.getAreaCode())));
 
     // Get latest org code and increase 1, if not exist start with xxx001
-    Organization organization = organizationRepository.findFirstByAreaCodeOrderByCodeDesc(organizationDTO.getAreaCode());
+    Organization lastestOrganization = organizationRepository.findFirstByAreaCodeOrderByCodeDesc(organizationDTO.getAreaCode());
     int orgOrderNumber;
-    if (nonNull(organization)) {
-      orgOrderNumber = Integer.parseInt(organization.getCode().substring(3, 6));
+    if (nonNull(lastestOrganization)) {
+      orgOrderNumber = Integer.parseInt(lastestOrganization.getCode().substring(3, 6));
     } else {
       orgOrderNumber = 0;
     }

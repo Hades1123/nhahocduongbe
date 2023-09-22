@@ -51,4 +51,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
           Pageable pageable);
 
   List<Patient> findAllByOrganization_Id(Long id);
+
+  Patient findFirstByOrganizationCodeOrderByCodeDesc(String organizationCode);
 }

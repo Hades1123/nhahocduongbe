@@ -349,6 +349,7 @@ create table NHAHOCDUONG_PATIENT(
                                     gender integer not null,
                                     birthdate date not null,
                                     ethnic varchar not null,
+                                    code varchar not null,
                                     area_type varchar,
                                     phone_number varchar,
                                     address_line varchar,

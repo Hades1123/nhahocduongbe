@@ -9,6 +9,7 @@ import java.util.List;
 public record PatientDTO(
         Long id,
         String fullName,
+        String code,
         String healthInsuranceNumber,
         Integer gender,
         LocalDate birthDate,

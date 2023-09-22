@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
@@ -52,14 +54,15 @@ public class OrganizationService {
   }
 
   @Transactional
-  public OrganizationDTO updateOrganization(OrganizationDTO patientDTO, Long id) {
-    var entity = organizationMapper.toEntity(patientDTO);
-    entity.setId(id);
+  public OrganizationDTO updateOrganization(OrganizationDTO organizationDTO, Long id) {
+    var entity = organizationRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, "Not found organization with ID " + id
+    ));
 
+    var updatedEntity = organizationMapper.partialUpdate(organizationDTO, entity);
+    organizationRepository.save(updatedEntity);
 
-    organizationRepository.save(entity);
-
-    return organizationMapper.toDto(entity);
+    return organizationMapper.toDto(updatedEntity);
   }
 
   public boolean delete(Long id){

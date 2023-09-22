@@ -34,10 +34,10 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     SELECT org
     FROM Organization org
     WHERE (:#{#areaCodes.size()} = 0 OR org.areaCode IN :areaCodes)
-      AND (:#{#searchCriteria.searchText} IS NULL OR (org.code LIKE %:#{#searchCriteria.searchText}%
-                                                      OR org.name LIKE %:#{#searchCriteria.searchText}% ))
+      AND (:#{#searchCriteria.getSearchText()} IS NULL OR (org.code LIKE %:#{#searchCriteria.getSearchText()}%
+                                                          OR org.name LIKE %:#{#searchCriteria.getSearchText()}% ))
       AND (:organizationId IS NULL OR org.id = :organizationId)
-      AND (:organizationId IS NOT NULL OR (:#{#searchCriteria.type} IS NULL OR org.type = :#{#searchCriteria.type} ))
+      AND (:organizationId IS NOT NULL OR ((:#{#searchCriteria.getType() eq NULL} OR org.type = :#{#searchCriteria.getType()} )))
   """)
   Page<Organization> findByCriteria(List<String> areaCodes,
                                     OrganizationSearchCriteria searchCriteria,

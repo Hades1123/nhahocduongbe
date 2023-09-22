@@ -13,6 +13,5 @@ public record OrganizationDTO(
   String code,
   String areaCode,
   Map<Grade, List<String>> classes,
-
   OrganizationType type
 ) {}

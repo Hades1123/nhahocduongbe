@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.search.SearchOrganizationDTO;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.OrganizationSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Organization;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Patient;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper.OrganizationMapper;
@@ -94,7 +94,7 @@ public class OrganizationService {
     return organizationMapper.toDtoList(organizationRepository.findAllByOrderByName());
   }
 
-  public Page<OrganizationDTO> search(SearchOrganizationDTO searchCriteria, Pageable pageable) {
+  public Page<OrganizationDTO> search(OrganizationSearchCriteria searchCriteria, Pageable pageable) {
     AuthorizationService.AuthorizationData authData = authorizationService.authorize();
     if (authData.getAreaCode() != null) {
       searchCriteria.setAreaCode(authData.getAreaCode());
@@ -107,10 +107,10 @@ public class OrganizationService {
     }
 
     List<String> areaCodesInside = areaService.getChildrenAreaCode(searchCriteria.getAreaCode());
-    Page<Organization> organizations = organizationRepository.findByCondition(areaCodesInside,
-                                                                              searchCriteria.getType(),
-                                                                              authData.getOrganizationId(),
-                                                                              pageable);
+    Page<Organization> organizations = organizationRepository.findByCriteria(areaCodesInside,
+                                                                             searchCriteria,
+                                                                             authData.getOrganizationId(),
+                                                                             pageable);
 
     return organizations.map(organizationMapper::toDto);
   }

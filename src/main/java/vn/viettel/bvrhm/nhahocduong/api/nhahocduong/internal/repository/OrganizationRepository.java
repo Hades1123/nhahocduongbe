@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.OrganizationSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Organization;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.OrganizationType;
 
 import java.util.List;
 
@@ -34,14 +34,13 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     SELECT org
     FROM Organization org
     WHERE (:#{#areaCodes.size()} = 0 OR org.areaCode IN :areaCodes)
+      AND (:#{#searchCriteria.searchText} IS NULL OR (org.code LIKE %:#{#searchCriteria.searchText}%
+                                                      OR org.name LIKE %:#{#searchCriteria.searchText}% ))
       AND (:organizationId IS NULL OR org.id = :organizationId)
-      AND (:organizationId IS NOT NULL OR (:type IS NULL OR org.type = :type))
+      AND (:organizationId IS NOT NULL OR (:#{#searchCriteria.type} IS NULL OR org.type = :#{#searchCriteria.type} ))
   """)
-  Page<Organization> findByCondition(List<String> areaCodes,
-                                     OrganizationType type,
-                                     Long organizationId,
-                                     Pageable pageable);
-
-  // TODO: implement search
-//  List<Organization> findByCriteria();
+  Page<Organization> findByCriteria(List<String> areaCodes,
+                                    OrganizationSearchCriteria searchCriteria,
+                                    Long organizationId,
+                                    Pageable pageable);
 }

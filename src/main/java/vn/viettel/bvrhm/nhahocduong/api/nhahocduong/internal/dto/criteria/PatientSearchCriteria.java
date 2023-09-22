@@ -1,9 +1,6 @@
-package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.search;
+package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria;
 
 import lombok.Data;
-import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 /**
  * @author: longlb1

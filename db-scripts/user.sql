@@ -14,8 +14,22 @@ CREATE TABLE USER_USER
     updated_date date,
     deleted_date date
 );
-insert into USER_USER (username, email, first_name, last_name)
-values ('dev', 'dev@gpmn.net', 'Dev', 'developer');
+
+--default password: 123
+insert into USER_USER (username, password, email, first_name, last_name, organization)
+values
+    ('admin', '$2a$10$4DwHEwyHmjhZr/TMKxX7euQMUczpOvuyxggLdNQR8wLwRng..1R3W', 'dev@gpmn.net', 'admin', 'developer', null),
+    ('bvrhm', '$2a$10$4DwHEwyHmjhZr/TMKxX7euQMUczpOvuyxggLdNQR8wLwRng..1R3W',  'ql_bvrhm@ql_bvrhm.net', 'Quản lý', 'BVRHM', 1),
+    ('083001', '$2a$10$4DwHEwyHmjhZr/TMKxX7euQMUczpOvuyxggLdNQR8wLwRng..1R3W',  '083001', 'Quản lý', 'Trường TH Thị trấn Chợ Lách', 10279),
+    ('083002', '$2a$10$4DwHEwyHmjhZr/TMKxX7euQMUczpOvuyxggLdNQR8wLwRng..1R3W',  '083002', 'Quản lý', 'Trường TH Thị trấn Giồng Trôm', 10280),
+    ('083003', '$2a$10$4DwHEwyHmjhZr/TMKxX7euQMUczpOvuyxggLdNQR8wLwRng..1R3W',  '083003', 'Quản lý', 'Trường TH Chu Văn An', 10281),
+    ('083004', '$2a$10$4DwHEwyHmjhZr/TMKxX7euQMUczpOvuyxggLdNQR8wLwRng..1R3W',  '083004', 'Quản lý', 'Trường TH Trần Hoàn Vũ', 10282),
+    ('083005', '$2a$10$4DwHEwyHmjhZr/TMKxX7euQMUczpOvuyxggLdNQR8wLwRng..1R3W',  '083005', 'Quản lý', 'Trường TH Tân Bình', 10283),
+    ('083006', '$2a$10$4DwHEwyHmjhZr/TMKxX7euQMUczpOvuyxggLdNQR8wLwRng..1R3W',  '083006', 'Quản lý', 'Trường TH Tân Thạch A', 10284),
+    ('083007', '$2a$10$4DwHEwyHmjhZr/TMKxX7euQMUczpOvuyxggLdNQR8wLwRng..1R3W',  '083007', 'Quản lý', 'Trường TH An Thới', 10285),
+    ('083008', '$2a$10$4DwHEwyHmjhZr/TMKxX7euQMUczpOvuyxggLdNQR8wLwRng..1R3W',  '083008', 'Quản lý', 'Trường TH Thị trấn Thạnh Phú', 10286),
+    ('083009', '$2a$10$4DwHEwyHmjhZr/TMKxX7euQMUczpOvuyxggLdNQR8wLwRng..1R3W',  '083009', 'Quản lý', 'Trường TH An Bình Tây', 10287 );
+;
 
 drop table if exists USER_ROLE;
 CREATE TABLE USER_ROLE

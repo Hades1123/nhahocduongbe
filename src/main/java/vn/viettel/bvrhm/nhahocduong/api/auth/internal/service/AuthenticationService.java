@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import vn.viettel.bvrhm.nhahocduong.api.auth.LoginRequest;
 import vn.viettel.bvrhm.nhahocduong.api.auth.LoginResponse;
 import vn.viettel.bvrhm.nhahocduong.api.auth.exception.InvalidCredentialException;
-import vn.viettel.bvrhm.nhahocduong.api.auth.internal.object.UserAuthDetails;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.mapper.UserAuthDetailsMapper;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.object.UserAuthDetails;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.repository.UserPasswordRepository;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.dto.RoleDTO;
@@ -18,9 +18,11 @@ import vn.viettel.bvrhm.nhahocduong.api.user.internal.dto.UserDTO;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.service.RoleService;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.service.UserService;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
+
+import static java.util.Objects.nonNull;
 
 @Service
 public class AuthenticationService implements UserDetailsService {
@@ -56,10 +58,14 @@ public class AuthenticationService implements UserDetailsService {
     // Get organization
     OrganizationDTO organization = userService.getUserByUsername(username).organization();
 
-    String token = jwtService.makeToken(userAuthDetails.getUserId(),
-                                        Map.of("roles", userRoles,
-                                               "organization", organization,
-                                               "username", userAuthDetails.getUsername()));
+    Map<String, Object> claims = new LinkedHashMap<>();
+    claims.put("roles", userRoles);
+    claims.put("username", userAuthDetails.getUsername());
+    if (nonNull(organization)) {
+      claims.put("organization", organization);
+    }
+
+    String token = jwtService.makeToken(userAuthDetails.getUserId(), claims);
 
     return new LoginResponse(token);
   }

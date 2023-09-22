@@ -11,10 +11,10 @@ import vn.viettel.bvrhm.nhahocduong.api.user.internal.entity.User;
 import java.util.List;
 import java.util.Map;
 
-@Entity
 @Data
+@Entity
 @Table(name = "nhahocduong_organization")
-public class Organization {
+public class Organization extends BaseEntity {
   @Id
   @GeneratedValue(generator = "organization_id_generator")
   @SequenceGenerator(

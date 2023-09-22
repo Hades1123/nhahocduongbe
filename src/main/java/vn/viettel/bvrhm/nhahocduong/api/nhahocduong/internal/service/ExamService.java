@@ -57,7 +57,7 @@ public class ExamService {
   }
 
 
-  @Retryable(retryFor = CannotAcquireLockException.class, maxAttempts = 3, backoff = @Backoff(delay = 300))
+  @Retryable(retryFor = CannotAcquireLockException.class, maxAttempts = 5, backoff = @Backoff(delay = 300))
   @Transactional(isolation = Isolation.SERIALIZABLE)
   public ExamDTO updateTeethRecordIdOfExamId(
     Long examId, Long teethRecordId) {
@@ -67,7 +67,7 @@ public class ExamService {
     return examMapper.toDto(updated);
   }
 
-  @Retryable(retryFor = CannotAcquireLockException.class, maxAttempts = 3, backoff = @Backoff(delay = 300))
+  @Retryable(retryFor = CannotAcquireLockException.class, maxAttempts = 5, backoff = @Backoff(delay = 300))
   @Transactional(isolation = Isolation.SERIALIZABLE)
   public ExamDTO updatePlaqueRecordIdOfExam(Long examId, Long plaqueRecordId) {
     Exam exam = examRepository.findById(examId).orElseThrow(NoSuchElementException::new);
@@ -76,7 +76,7 @@ public class ExamService {
     return examMapper.toDto(updated);
   }
 
-  @Retryable(retryFor = CannotAcquireLockException.class, maxAttempts = 3, backoff = @Backoff(delay = 300))
+  @Retryable(retryFor = CannotAcquireLockException.class, maxAttempts = 5, backoff = @Backoff(delay = 300))
   @Transactional(isolation = Isolation.SERIALIZABLE)
   public ExamDTO updateTartarRecordIdOfExam(Long examId, Long tartarRecordId) {
     Exam exam = examRepository.findById(examId).orElseThrow(NoSuchElementException::new);
@@ -157,7 +157,7 @@ public class ExamService {
   }
 
 
-  @Retryable(retryFor = CannotAcquireLockException.class, maxAttempts = 3, backoff = @Backoff(delay = 300))
+  @Retryable(retryFor = CannotAcquireLockException.class, maxAttempts = 5, backoff = @Backoff(delay = 300))
   @Transactional(isolation = Isolation.SERIALIZABLE)
   public TreatmentRecord updateTreatmentRecordByExamId(
       Long examId, TreatmentRecord treatmentRecord) {

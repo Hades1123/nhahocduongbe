@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.entity.User;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.repository.UserRepository;
 
+import java.util.NoSuchElementException;
+
 /**
  * @author: longlb1
  * @since: 18-Sep-23

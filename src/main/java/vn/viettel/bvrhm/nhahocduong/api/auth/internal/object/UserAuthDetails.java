@@ -17,7 +17,6 @@ import java.util.Set;
 public class UserAuthDetails implements UserDetails, CredentialsContainer {
 
   private static final Logger logger = LoggerFactory.getLogger(UserAuthDetails.class);
-
   private Long userId;
   private String username;
   private Set<GrantedAuthority> authorities;

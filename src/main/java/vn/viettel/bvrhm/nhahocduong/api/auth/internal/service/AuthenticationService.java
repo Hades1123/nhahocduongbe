@@ -12,6 +12,7 @@ import vn.viettel.bvrhm.nhahocduong.api.auth.exception.InvalidCredentialExceptio
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.object.UserAuthDetails;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.mapper.UserAuthDetailsMapper;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.repository.UserPasswordRepository;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.dto.RoleDTO;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.dto.UserDTO;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.service.RoleService;
@@ -34,8 +35,8 @@ public class AuthenticationService implements UserDetailsService {
   public LoginResponse authenticate(LoginRequest loginRequest) throws InvalidCredentialException {
     String username = loginRequest.username();
     // TODO expand logic to allow login with email, phoneNumber, security key, etc...
-//    String username = username;
-//    Long userId = userService.getUserIdFromUsername(username);
+
+    // Check username
     UserAuthDetails userAuthDetails;
     try {
       userAuthDetails = loadUserByUsername(username);
@@ -43,16 +44,21 @@ public class AuthenticationService implements UserDetailsService {
       throw new InvalidCredentialException();
     }
 
+    // Verify password
     String password = loginRequest.password();
-
     if (!userService.checkValidUserIdPassword(userAuthDetails.getUserId(), password)) {
       throw new InvalidCredentialException();
     }
 
+    // Get role
     List<RoleDTO> userRoles = roleService.getActiveRoleByUsername(username);
-//    String token = jwtService.makeTokenWithUserIdAndRoles(userDTO.id(), userRoles);
+
+    // Get organization
+    OrganizationDTO organization = userService.getUserByUsername(username).organization();
+
     String token = jwtService.makeToken(userAuthDetails.getUserId(),
                                         Map.of("roles", userRoles,
+                                               "organization", organization,
                                                "username", userAuthDetails.getUsername()));
 
     return new LoginResponse(token);

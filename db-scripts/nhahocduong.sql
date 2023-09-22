@@ -30,9 +30,10 @@ CREATE TABLE NHAHOCDUONG_ORGANIZATION
     parent          bigint references nhahocduong_organization(id),
     type          int,
     classes      jsonb,
-    created_date date,
-    updated_date date,
-    deleted_date date
+    created_date timestamp,
+    updated_date timestamp,
+    created_by varchar,
+    updated_by varchar
 );
 
 alter table USER_USER add constraint user_organization_fk

@@ -2,18 +2,18 @@ package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService;
@@ -23,10 +23,10 @@ import vn.viettel.bvrhm.nhahocduong.api.common.internal.utils.ExcelUtil;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.ImportPatientExcelColumn;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.PatientDTO;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.OrganizationSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.PatientSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Disease;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Ethnic;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Exam;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Patient;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper.PatientMapper;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository.DiseaseRepository;
@@ -35,6 +35,8 @@ import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.Organizatio
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.PatientService;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.repository.UserRepository;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -45,7 +47,6 @@ import static java.util.Objects.nonNull;
 
 @Service
 public class PatientServiceImpl implements PatientService {
-
   @Autowired
   AreaService areaService;
   @Autowired PatientRepository patientRepository;
@@ -69,14 +70,7 @@ public class PatientServiceImpl implements PatientService {
   public PatientDTO createPatient(PatientDTO patientDTO) {
     // Check organization class and patient class
     OrganizationDTO organizationDTO = organizationService.getOrganizationById(patientDTO.organization().getId());
-    List<String> schoolClassList = organizationDTO.getClasses()
-                                                  .values()
-                                                  .stream()
-                                                  .reduce((classList, classList2) -> {
-                                                    classList.addAll(classList2);
-                                                    return classList;
-                                                  })
-                                                  .orElse(null);
+    List<String> schoolClassList = organizationDTO.getFlattenClassList();
     if (isNull(schoolClassList)) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found any class of school with Code " + patientDTO.organization().getCode());
     }
@@ -169,6 +163,62 @@ public class PatientServiceImpl implements PatientService {
 
     List<PatientDTO> patientDTOList = extractPatientDataFromSheet(sheet);
     return patientDTOList.stream().map(this::createPatient).toList();
+  }
+
+  @Override
+  public byte[] generateExcelTemplateFile(HttpServletResponse response) throws IOException {
+    FileInputStream inputStream = new FileInputStream(ResourceUtils.getFile("classpath:template/excel/Import_Hocsinh.xlsx"));;
+    try (FileInputStream is = inputStream){
+      List<OrganizationDTO> organizationDTOList = organizationService.search(new OrganizationSearchCriteria(), null).toList();
+      XSSFWorkbook workbook = new XSSFWorkbook(is);
+      XSSFSheet sheet = workbook.getSheetAt(1);
+
+
+      for(int i = 0; i < organizationDTOList.size(); i++) {
+        OrganizationDTO organizationData = organizationDTOList.get(i);
+        // Create row
+        XSSFRow row = sheet.createRow(i+1);
+
+        // Insert data
+        row.createCell(0).setCellValue(i+1);
+        if (nonNull(organizationData.getAreaCode())) {
+          row.createCell(1).setCellValue(organizationData.getAreaCode());
+        }
+        if(nonNull(organizationData.getAddress())) {
+          row.createCell(2).setCellValue(organizationData.getAddress());
+        }
+        if(nonNull(organizationData.getCode())) {
+          row.createCell(3).setCellValue(organizationData.getCode());
+        }
+        if(nonNull(organizationData.getName())) {
+          row.createCell(4).setCellValue(organizationData.getName());
+        }
+        if(nonNull(organizationData.getFlattenClassList())) {
+          row.createCell(5).setCellValue(String.join(",", organizationData.getFlattenClassList()));
+        }
+      }
+      // Style sheet
+      // Style normal rows
+      XSSFCellStyle normalCellStyle = workbook.createCellStyle();
+      normalCellStyle.setBorderTop(BorderStyle.THIN);
+      normalCellStyle.setBorderBottom(BorderStyle.THIN);
+      normalCellStyle.setBorderLeft(BorderStyle.THIN);
+      normalCellStyle.setBorderRight(BorderStyle.THIN);
+      normalCellStyle.setAlignment(HorizontalAlignment.CENTER);
+      normalCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+      ExcelUtil.addStyleForCells(sheet, normalCellStyle, 0, 5, 1, organizationDTOList.size());
+      ExcelUtil.autoSizeColumns(sheet, 6);
+
+      response.setContentType(MediaType.APPLICATION_XML_VALUE);
+      response.setHeader("Content-Disposition", "attachment; filename=Import_Hocsinh.xlsx");
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      workbook.write(outputStream);
+      workbook.close();
+      return outputStream.toByteArray();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   private List<PatientDTO> extractPatientDataFromSheet(Sheet sheet) {

@@ -1,5 +1,6 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -40,4 +41,6 @@ public interface PatientService {
     boolean deletePatientById(Long id);
 
     List<PatientDTO> importPatientsFromExcel(MultipartFile file) throws IOException;
+
+    byte[] generateExcelTemplateFile(HttpServletResponse response) throws IOException;
 }

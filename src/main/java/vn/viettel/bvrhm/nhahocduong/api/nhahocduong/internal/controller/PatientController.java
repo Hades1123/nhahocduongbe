@@ -1,5 +1,6 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,14 +58,18 @@ public class PatientController {
 //    return patientService.getPatientByCondition(searchText, organizationName, schoolClass);
 //  }
 
-  @GetMapping("/patients")
+  @GetMapping("/patient")
   public Page<PatientDTO> getPatientsAll(Pageable pageable) {
     return patientService.getAllPatients(pageable);
   }
 
-  @PostMapping("/patients/excel")
+  @PostMapping("/patient/excel")
   public List<PatientDTO> importPatientsFromExcel(@RequestParam MultipartFile file) throws IOException {
     return patientService.importPatientsFromExcel(file);
   }
 
+  @GetMapping("/patient/excel/template")
+  public byte[] getTemplateFile(HttpServletResponse response) throws IOException {
+    return patientService.generateExcelTemplateFile(response);
+  }
 }

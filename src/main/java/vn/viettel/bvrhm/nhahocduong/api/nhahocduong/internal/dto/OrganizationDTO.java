@@ -17,4 +17,14 @@ public class OrganizationDTO{
     private Map<Grade, List<String>> classes;
     private OrganizationType type = OrganizationType.SCHOOL;
 
+    public List<String> getFlattenClassList() {
+        return this.getClasses()
+                .values()
+                .stream()
+                .reduce((classList, classList2) -> {
+                    classList.addAll(classList2);
+                    return classList;
+                })
+                .orElse(null);
+    }
 }

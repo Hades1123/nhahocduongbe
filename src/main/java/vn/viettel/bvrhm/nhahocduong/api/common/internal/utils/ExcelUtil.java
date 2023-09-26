@@ -12,15 +12,27 @@ import java.io.InputStream;
  * @since: 26-Sep-23
  */
 public class ExcelUtil {
-    public static void addCellsBorders(Workbook workbook, Sheet sheet, BorderStyle borderStyle, int numberOfCols, int numberOfRows) {
-        CellStyle cellStyle = workbook.createCellStyle();
-        cellStyle.setBorderTop(borderStyle);
-        cellStyle.setBorderBottom(borderStyle);
-        cellStyle.setBorderLeft(borderStyle);
-        cellStyle.setBorderRight(borderStyle);
+//    public static void addCellsBorders(Workbook workbook, Sheet sheet, BorderStyle borderStyle,  int startCol, int startRow, int endCol, int endRow, ) {
+//        CellStyle cellStyle = workbook.createCellStyle();
+//        cellStyle.setBorderTop(borderStyle);
+//        cellStyle.setBorderBottom(borderStyle);
+//        cellStyle.setBorderLeft(borderStyle);
+//        cellStyle.setBorderRight(borderStyle);
+//
+//        for (int col = 0; col < numberOfCols; col++) {
+//            for (int row = 0; row < numberOfRows; row++) {
+//                Cell cell = sheet.getRow(row).getCell(col);
+//                if (cell == null) {
+//                    cell = sheet.getRow(row).createCell(col);
+//                }
+//                cell.setCellStyle(cellStyle);
+//            }
+//        }
+//    }
 
-        for (int col = 0; col < numberOfCols; col++) {
-            for (int row = 0; row < numberOfRows; row++) {
+    public static void addStyleForCells(Sheet sheet, CellStyle cellStyle, int startCol, int endCol, int startRow, int endRow) {
+        for (int col = startCol; col <= endCol; col++) {
+            for (int row = startRow; row <= endRow; row++) {
                 Cell cell = sheet.getRow(row).getCell(col);
                 if (cell == null) {
                     cell = sheet.getRow(row).createCell(col);

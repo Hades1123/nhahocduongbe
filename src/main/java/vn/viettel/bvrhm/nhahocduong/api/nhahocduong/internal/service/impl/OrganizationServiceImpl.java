@@ -139,4 +139,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     return codeBuilder.toString();
   }
+
+  @Override
+  public OrganizationDTO getOrganizationByCode(String code) {
+    return organizationMapper.toDto(organizationRepository.findByCode(code));
+  }
 }

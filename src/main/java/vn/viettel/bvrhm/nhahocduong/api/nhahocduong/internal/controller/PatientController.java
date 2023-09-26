@@ -4,16 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.PatientDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.PatientSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper.PatientMapper;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository.PatientRepository;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.PatientService;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.impl.PatientServiceImpl;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class PatientController {
-  @Autowired PatientService patientService;
+  @Autowired
+  PatientServiceImpl patientService;
   @Autowired PatientRepository patientRepository;
   @Autowired PatientMapper patientMapper;
 
@@ -56,4 +61,10 @@ public class PatientController {
   public Page<PatientDTO> getPatientsAll(Pageable pageable) {
     return patientService.getAllPatients(pageable);
   }
+
+  @PostMapping("/patients/excel")
+  public List<PatientDTO> importPatientsFromExcel(@RequestParam MultipartFile file) throws IOException {
+    return patientService.importPatientsFromExcel(file);
+  }
+
 }

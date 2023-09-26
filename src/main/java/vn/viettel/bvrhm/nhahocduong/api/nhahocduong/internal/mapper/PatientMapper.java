@@ -18,6 +18,8 @@ public interface PatientMapper {
 
   List<PatientDTO> toDtoList(List<Patient> patientList);
 
+  List<Patient> toEntityList (List<PatientDTO> dtoList);
+
   //  @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   //  Patient partialUpdate(
   //      PatientDTO patientDTO, @MappingTarget Patient patient);

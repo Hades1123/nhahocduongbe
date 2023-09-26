@@ -1,155 +1,43 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService;
-import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService.AuthorizationData;
-import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.PatientDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.PatientSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Disease;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Patient;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper.PatientMapper;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository.DiseaseRepository;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository.PatientRepository;
-import vn.viettel.bvrhm.nhahocduong.api.user.internal.repository.UserRepository;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static java.util.Objects.nonNull;
-
-@Service
-public class PatientService {
-
-  @Autowired
-  AreaService areaService;
-  @Autowired PatientRepository patientRepository;
-
-  @Autowired OrganizationService organizationService;
-  @Autowired PatientMapper patientMapper;
-  @Autowired DiseaseRepository diseaseRepository;
-  @PersistenceContext EntityManager entityManager;
-  @Autowired
-  private UserRepository userRepository;
-
-  @Autowired
-  private AuthorizationService authorizationService;
-
-  public PatientDTO getPatientById(Long id) {
-    Patient patient = patientRepository.findById(id).orElse(null);
-    return patientMapper.toDto(patient);
-  }
-
-  @Transactional
-  public PatientDTO createPatient(PatientDTO patientDTO) {
-    var entity = patientMapper.toEntity(patientDTO);
-    entity.setCode(generateCode(patientDTO));
-
-    patientRepository.saveAndFlush(entity);
-    entityManager.refresh(entity);
-
-    return patientMapper.toDto(entity);
-  }
-
-  @Transactional
-  public PatientDTO updatePatient(PatientDTO patientDTO, Long id) {
-    var entity = patientMapper.toEntity(patientDTO);
-    entity.setId(id);
-
-    // TODO: optimize this
-    List<Disease> chronicConditions = null;
-    if (patientDTO.chronicConditions() != null && !patientDTO.chronicConditions().isEmpty()) {
-      List<Long> updateChronicConditionIds =
-          patientDTO.chronicConditions().stream().map(diseaseDTO -> diseaseDTO.id()).toList();
-      chronicConditions = diseaseRepository.findAllById(updateChronicConditionIds);
-    }
-    entity.setChronicConditions(chronicConditions);
-
-    patientRepository.save(entity);
-
-    return patientMapper.toDto(entity);
-  }
-
-  public List<PatientDTO> getPatientByCondition(
-      String searchText,
-      String organizationName,
-      List<String> schoolClass) {
-    List<Patient> patients =
-        patientRepository.findByCondition(searchText, organizationName, schoolClass);
-
-    return patientMapper.toDtoList(patients);
-  }
-
-  public Page<PatientDTO> getPagePatientByCondition(
-          PatientSearchCriteria searchCriteria, Pageable pageable) {
-    AuthorizationData authData = authorizationService.authorize();
-    if (authData.getAreaCode() != null) {
-      searchCriteria.setAreaCode(authData.getAreaCode());
-    }
-
-    if (searchCriteria.getAreaCode() != null) {
-      if (areaService.getAreaByCode(searchCriteria.getAreaCode()) == null) {
-        return new PageImpl<>(Collections.emptyList(), pageable, 0);
-      }
-    }
-    List<String> areaCodesInside = areaService.getChildrenAreaCode(searchCriteria.getAreaCode());
+/**
+ * @author: longlb1
+ * @since: 26-Sep-23
+ */
+public interface PatientService {
+    PatientDTO getPatientById(Long id);
     
-    Page<Patient> patients =
-            patientRepository.findAllByCondition(searchCriteria.getSearchText(),
-                                                 searchCriteria.getOrganizationName(),
-                                                 authData.getOrganizationId(),
-                                                 areaCodesInside,
-                                                 searchCriteria.getSchoolClass(),
-                                                 pageable);
+    PatientDTO createPatient(PatientDTO patientDTO);
+    
+    PatientDTO updatePatient(PatientDTO patientDTO, Long id);
 
-    return patients.map(patientMapper::toDto);
-  }
+    List<PatientDTO> getPatientByCondition(
+            String searchText,
+            String organizationName,
+            List<String> schoolClass);
 
-  public Page<PatientDTO> getAllPatients(Pageable pageable) {
-    Page<Patient> patients = patientRepository.findAll(pageable);
+    Page<PatientDTO> getPagePatientByCondition(
+            PatientSearchCriteria searchCriteria, Pageable pageable);
 
-    return patients.map(patientMapper::toDto);
-  }
+    Page<PatientDTO> getAllPatients(Pageable pageable);
 
-  public boolean deletePatientById(Long id) {
-    Patient patient = patientRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    boolean deletePatientById(Long id);
 
-    patient.setStatus(false);
-    patientRepository.save(patient);
-
-    return true;
-  }
-
-  private String generateCode(PatientDTO patientDTO) {
-    // Get org code
-    OrganizationDTO organization = organizationService.getOrganizationById(patientDTO.organization().getId());
-    if (organization == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Organization not found!");
-
-    StringBuilder codeBuilder = new StringBuilder();
-    codeBuilder.append(organization.getCode());
-
-    // Get latest patient code and increase 1, if not exist start with xxxyyy001
-    Patient latestPatient = patientRepository.findFirstByOrganizationCodeOrderByCodeDesc(organization.getCode());
-    int patientOrderNumber;
-    if (nonNull(latestPatient)) {
-      patientOrderNumber = Integer.parseInt(latestPatient.getCode().substring(6, 9));
-    } else {
-      patientOrderNumber = 0;
-    }
-    codeBuilder.append(String.format("%03d", patientOrderNumber + 1));
-
-    return codeBuilder.toString();
-  }
+    List<PatientDTO> importPatientsFromExcel(MultipartFile file) throws IOException;
 }

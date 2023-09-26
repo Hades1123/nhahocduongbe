@@ -1,11 +1,14 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto;
 
+import lombok.Builder;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Ethnic;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+
+@Builder(toBuilder = true)
 public record PatientDTO(
         Long id,
         String fullName,

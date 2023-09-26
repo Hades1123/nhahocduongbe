@@ -27,4 +27,21 @@ public enum Ethnic {
     return this.description;
   }
 
+  public static Ethnic getByCode(int code) {
+    for (Ethnic ethnic : Ethnic.values()) {
+      if (ethnic.code == code) {
+        return ethnic;
+      }
+    }
+    return null;
+  }
+
+  public static Ethnic getByDescription(String description) {
+    for (Ethnic ethnic : Ethnic.values()) {
+      if (ethnic.description.equals(description)) {
+        return ethnic;
+      }
+    }
+    return null;
+  }
 }

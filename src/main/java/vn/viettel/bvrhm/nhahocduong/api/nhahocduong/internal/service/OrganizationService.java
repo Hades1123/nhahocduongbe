@@ -12,12 +12,21 @@ import java.util.List;
  * @since: 22-Sep-23
  */
 public interface OrganizationService {
-        OrganizationDTO getOrganizationById(Long id);
-        OrganizationDTO createOrganization(OrganizationDTO organizationDTO);
-        OrganizationDTO updateOrganization(OrganizationDTO organizationDTO, Long id);
-        boolean delete(Long id);
-        List<OrganizationDTO> getByCondition(String name);
-        List<OrganizationDTO> getByAreaCode(String areaCode);
-        List<OrganizationDTO> getAll();
-        Page<OrganizationDTO> search(OrganizationSearchCriteria searchCriteria, Pageable pageable);
+    OrganizationDTO getOrganizationById(Long id);
+
+    OrganizationDTO createOrganization(OrganizationDTO organizationDTO);
+
+    OrganizationDTO updateOrganization(OrganizationDTO organizationDTO, Long id);
+
+    boolean delete(Long id);
+
+    List<OrganizationDTO> getByCondition(String name);
+
+    List<OrganizationDTO> getByAreaCode(String areaCode);
+
+    List<OrganizationDTO> getAll();
+
+    Page<OrganizationDTO> search(OrganizationSearchCriteria searchCriteria, Pageable pageable);
+
+    OrganizationDTO getOrganizationByCode(String code);
 }

@@ -13,4 +13,5 @@ public class OrganizationSearchCriteria {
     private String searchText;
     private String areaCode;
     private OrganizationType type = OrganizationType.SCHOOL;
+    private Boolean status = true;
 }

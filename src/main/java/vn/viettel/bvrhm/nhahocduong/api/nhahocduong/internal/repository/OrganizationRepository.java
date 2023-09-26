@@ -37,7 +37,8 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
       AND (:#{#searchCriteria.getSearchText()} IS NULL OR (org.code LIKE %:#{#searchCriteria.getSearchText()}%
                                                           OR org.name LIKE %:#{#searchCriteria.getSearchText()}%))
       AND (:organizationId IS NULL OR org.id = :organizationId)
-      AND (:organizationId IS NOT NULL OR ((:#{#searchCriteria.getType() eq NULL} = TRUE OR org.type = :#{#searchCriteria.getType()} )))
+      AND (:organizationId IS NOT NULL OR ((:#{#searchCriteria.getType() eq NULL} = TRUE OR org.type = :#{#searchCriteria.getType()})))
+      AND (:#{#searchCriteria.getStatus() eq NULL} = TRUE OR org.status = :#{#searchCriteria.getStatus()})
   """)
   Page<Organization> findByCriteria(List<String> areaCodes,
                                     OrganizationSearchCriteria searchCriteria,

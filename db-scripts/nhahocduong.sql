@@ -30,6 +30,7 @@ CREATE TABLE NHAHOCDUONG_ORGANIZATION
     parent          bigint references nhahocduong_organization(id),
     type          int,
     classes      jsonb,
+    status boolean not null default true,
     created_date timestamp,
     updated_date timestamp,
     created_by varchar,

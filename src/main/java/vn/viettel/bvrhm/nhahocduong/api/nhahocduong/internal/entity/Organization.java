@@ -55,4 +55,7 @@ public class Organization extends BaseEntity {
   @Column(name = "type")
   @Convert(converter = OrganizationTypeConverter.class)
   private OrganizationType type;
+
+  @Column(name = "status")
+  private Boolean status;
 }

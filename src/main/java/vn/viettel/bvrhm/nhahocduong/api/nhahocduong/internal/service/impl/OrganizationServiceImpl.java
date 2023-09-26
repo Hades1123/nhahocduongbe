@@ -70,6 +70,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     return organizationMapper.toDto(updatedEntity);
   }
 
+  @Transactional
   public boolean delete(Long id){
     List<Patient> patientList = patientRepository.findAllByOrganization_Id(id);
     if(patientList.size() > 0){
@@ -77,7 +78,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
     Organization organization = organizationRepository.findById(id).orElse(null);
     if(organization != null){
-      organizationRepository.delete(organization);
+      organization.setStatus(false);
+      organizationRepository.save(organization);
       return true;
     }
 

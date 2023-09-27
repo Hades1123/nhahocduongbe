@@ -39,7 +39,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
                   "or p.healthInsuranceNumber like %:searchText%)) " +
                   "and (:organizationId is null or p.organization.id = :organizationId) " +
                   "and (:organizationId is not null or (:organizationName is null or p.organization.name like %:organizationName%))" +
-                  "and (:#{null eq #schoolClass} = true or p.schoolClass = :schoolClass) " +
+                  "and (:#{null eq #schoolClass} = true or p.schoolClass LIKE %:schoolClass%) " +
                   "AND (:#{#areaCodes.size()} = 0 OR  p.organization.areaCode IN :areaCodes)"
   )
   Page<Patient> findAllByCondition(

@@ -1,4 +1,4 @@
-package vn.viettel.bvrhm.nhahocduong.api.common.internal.helper;
+package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.helper;
 
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 

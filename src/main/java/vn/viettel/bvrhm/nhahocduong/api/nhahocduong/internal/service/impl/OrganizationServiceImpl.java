@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService;
-import vn.viettel.bvrhm.nhahocduong.api.common.internal.helper.OrganizationServiceHelper;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.helper.OrganizationServiceHelper;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.OrganizationSearchCriteria;
@@ -23,9 +23,7 @@ import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository.PatientR
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.OrganizationService;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static java.util.Objects.nonNull;
 

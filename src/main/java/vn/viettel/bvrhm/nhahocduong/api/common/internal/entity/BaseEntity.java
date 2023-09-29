@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 //@Inheritance
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity {
+public class BaseEntity {
     @Column(name = "STATUS", nullable = false)
     private Boolean status;
 

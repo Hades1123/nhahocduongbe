@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService;
+import vn.viettel.bvrhm.nhahocduong.api.common.internal.helper.OrganizationServiceHelper;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.OrganizationSearchCriteria;
@@ -51,9 +52,7 @@ public class OrganizationServiceImpl implements OrganizationService {
   @Transactional
   public OrganizationDTO createOrganization(OrganizationDTO organizationDTO) {
     // Check duplicate class
-    List<String> flattenClassList = organizationDTO.getFlattenClassList();
-    Set<String> classes = new HashSet<>();
-    List<String> duplicateClasses = flattenClassList.stream().filter(clazz -> !classes.add(clazz.trim().toLowerCase())).toList();
+    List<String> duplicateClasses = OrganizationServiceHelper.getDuplicateClassList(organizationDTO);
     if (!duplicateClasses.isEmpty()) {
       throw new ResponseStatusException(
               HttpStatus.BAD_REQUEST, "Duplicated class(es): " + String.join(", ", duplicateClasses)
@@ -75,6 +74,14 @@ public class OrganizationServiceImpl implements OrganizationService {
     var entity = organizationRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, "Not found organization with ID " + id
     ));
+
+    // Check duplicate class
+    List<String> duplicateClasses = OrganizationServiceHelper.getDuplicateClassList(organizationDTO);
+    if (!duplicateClasses.isEmpty()) {
+      throw new ResponseStatusException(
+              HttpStatus.BAD_REQUEST, "Duplicated class(es): " + String.join(", ", duplicateClasses)
+      );
+    }
 
     var updatedEntity = organizationMapper.partialUpdate(organizationDTO, entity);
     organizationRepository.save(updatedEntity);

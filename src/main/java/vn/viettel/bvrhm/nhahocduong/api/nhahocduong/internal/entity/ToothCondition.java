@@ -1,6 +1,9 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity;
 
 import lombok.Data;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.ToothProblem;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.ToothSide;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.ToothTreatment;
 
 import java.util.List;
 

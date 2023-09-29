@@ -2,7 +2,7 @@ package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Ethnic;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Ethnic;
 
 import java.io.Serializable;
 import java.time.LocalDate;

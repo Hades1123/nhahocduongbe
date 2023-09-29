@@ -1,7 +1,7 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria;
 
 import lombok.Data;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.OrganizationType;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.OrganizationType;
 
 /**
  * @author: longlb1

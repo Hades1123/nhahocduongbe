@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface TreatmentRecordRepository extends JpaRepository<TreatmentRecord, Long> {
     List<TreatmentRecord> findByExamIdAndStatus(Long id, boolean status);
+    List<TreatmentRecord> findByIdIsIn(List<Long> ids);
 }

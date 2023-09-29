@@ -2,7 +2,7 @@ package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper;
 
 import org.mapstruct.*;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Grade;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Grade;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Organization;
 
 import java.util.List;

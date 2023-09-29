@@ -1,4 +1,4 @@
-package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity;
+package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

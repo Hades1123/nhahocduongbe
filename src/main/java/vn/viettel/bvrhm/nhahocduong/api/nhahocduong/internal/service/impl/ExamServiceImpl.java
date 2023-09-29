@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.ExamDTO;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.TreatmentRecordDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.*;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper.ExamMapper;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper.TreatmentRecordMapper;
@@ -41,8 +40,6 @@ public class ExamServiceImpl implements ExamService {
     private DentistRepository dentistRepository;
     @Autowired
     private OrganizationRepository organizationRepository;
-    @Autowired
-    private TreatmentRecordRepository treatmentRecordRepository;
 
     @Override
     public List<ExamDTO> getExamsByPatientIdAndStatus(Long patientId, boolean status) {
@@ -72,15 +69,14 @@ public class ExamServiceImpl implements ExamService {
         Exam newExam = examMapper.toEntity(newExamDTO);
         newExam.setId(null);
         Exam createdExam = examRepository.save(newExam);
-        var createdExamDTO = examMapper.toDto(createdExam);
-        return createdExamDTO;
+        return examMapper.toDto(createdExam);
     }
 
 
     @Override
     @Retryable(retryFor = CannotAcquireLockException.class, maxAttempts = 5, backoff = @Backoff(delay = 300))
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public ExamDTO updateTeethRecordIdOfExamId(
+    public ExamDTO updateTeethRecordIdOfExam(
             Long examId, Long teethRecordId) {
         Exam exam = examRepository.getReferenceById(examId);
         exam.setTeethRecordId(teethRecordId);
@@ -130,8 +126,7 @@ public class ExamServiceImpl implements ExamService {
         Exam exam = examRepository.getReferenceById(examId);
 
         List<Disease> chronicConditions = exam.getChronicConditions();
-        List<String> codeList = chronicConditions.stream().map(disease -> disease.getCode()).toList();
-        return codeList;
+        return chronicConditions.stream().map(Disease::getCode).toList();
     }
 
     /**
@@ -149,8 +144,7 @@ public class ExamServiceImpl implements ExamService {
         exam.setChronicConditions(newDiseaseList);
         Exam updateExam = examRepository.save(exam);
         List<Disease> chronicConditions = updateExam.getChronicConditions();
-        List<String> codeList = chronicConditions.stream().map(disease -> disease.getCode()).toList();
-        return codeList;
+        return chronicConditions.stream().map(Disease::getCode).toList();
     }
 
     @Override
@@ -159,27 +153,25 @@ public class ExamServiceImpl implements ExamService {
         Dentist dentist = dentistRepository.findById(entity.getDentistId()).orElse(null);
         Organization organization =
                 organizationRepository.findById(entity.getOrganizationId()).orElse(null);
-        ExamDTO dto =
-                new ExamDTO(
-                        entity.getId(),
-                        entity.getPatientId(),
-                        patient.getFullName(),
-                        entity.getDentistId(),
-                        dentist.getTitle(),
-                        entity.getOrganizationId(),
-                        organization.getName(),
-                        entity.getSchoolClass(),
-                        entity.getYear(),
-                        entity.getProfileNumber(),
-                        entity.getDate(),
-                        entity.getTeethRecordId(),
-                        entity.getPlaqueRecordId(),
-                        entity.getTartarRecordId(),
-                        treatmentRecordMapper.toListDto(entity.getTreatmentRecords()),
-                        entity.getStatus()
-                );
 
-        return dto;
+        return new ExamDTO(
+                entity.getId(),
+                entity.getPatientId(),
+                patient.getFullName(),
+                entity.getDentistId(),
+                dentist.getTitle(),
+                entity.getOrganizationId(),
+                organization.getName(),
+                entity.getSchoolClass(),
+                entity.getYear(),
+                entity.getProfileNumber(),
+                entity.getDate(),
+                entity.getTeethRecordId(),
+                entity.getPlaqueRecordId(),
+                entity.getTartarRecordId(),
+                treatmentRecordMapper.toListDto(entity.getTreatmentRecords()),
+                entity.getStatus()
+        );
     }
 
     @Override
@@ -192,36 +184,6 @@ public class ExamServiceImpl implements ExamService {
         return true;
     }
 
-
-    @Override
-    @Retryable(retryFor = CannotAcquireLockException.class, maxAttempts = 5, backoff = @Backoff(delay = 300))
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public List<TreatmentRecordDTO> upsertTreatmentRecordsByExamId(
-            Long examId, List<TreatmentRecordDTO> treatmentRecordDTOS) {
-        Exam exam = examRepository.findById(examId).orElseThrow(NoSuchElementException::new);
-
-        List<TreatmentRecord> treatmentRecords = treatmentRecordMapper.toListEntity(treatmentRecordDTOS);
-        // Remove treatment record that not in upsert list
-        List<TreatmentRecord> treatmentRecordsNotIncluded = exam.getTreatmentRecords().stream()
-                                                                                    .filter(record -> treatmentRecords.stream()
-                                                                                            .anyMatch(upsertRecord -> !record.getId().equals(upsertRecord.getId()))
-                                                                                    ).toList();
-        treatmentRecordsNotIncluded.forEach(record -> record.setStatus(false));
-        treatmentRecordRepository.saveAll(treatmentRecordsNotIncluded);
-
-
-        // Upsert records
-        treatmentRecords.forEach(treatmentRecord -> treatmentRecord.setExam(exam));
-        List<TreatmentRecord> savedTreatmentRecord = treatmentRecordRepository.saveAll(treatmentRecords);
-
-        return treatmentRecordMapper.toListDto(savedTreatmentRecord);
-    }
-
-    @Override
-    public List<TreatmentRecordDTO> getTreatmentRecordsByExamId(Long examId) {
-        return treatmentRecordMapper.toListDto(treatmentRecordRepository.findByExamIdAndStatus(examId, true));
-    }
-
     @Override
     public ExamDTO updateExam(ExamDTO examDTO) {
         Exam exam = examRepository.findExamByIdAndPatientId(examDTO.getId(), examDTO.getPatientId());
@@ -231,22 +193,5 @@ public class ExamServiceImpl implements ExamService {
 
         examMapper.partialUpdate(examDTO, exam);
         return examMapper.toDto(examRepository.save(exam));
-    }
-
-    @Override
-    public boolean deleteTreatmentRecord(Long examId, Long treatmentRecordId) {
-        Exam exam = examRepository.findById(examId).orElse(null);
-        if (isNull(exam)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found exam with ID " + examId);
-        }
-
-        TreatmentRecord treatmentRecord = exam.getTreatmentRecords().stream().filter(record -> record.getId().equals(treatmentRecordId)).findFirst().orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found treatment record ID " + treatmentRecordId + " in the exam with ID " + examId);
-        });
-
-        treatmentRecord.setStatus(false);
-        treatmentRecordRepository.save(treatmentRecord);
-
-        return true;
     }
 }

@@ -8,10 +8,11 @@ import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.entity.BaseEntity;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.converter.ExamPlaceJpaConverter;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Tooth;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.ToothTreatment;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.converter.ToothJpaConverter;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.converter.ToothTreatmentJpaConverter;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.converter.TreatmentStatusJpaConverter;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.PrescriptionItem;
 
 @Entity
 @Table(name = "nhahocduong_treatment_record")

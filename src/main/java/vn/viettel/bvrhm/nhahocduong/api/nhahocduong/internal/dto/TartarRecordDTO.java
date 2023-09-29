@@ -1,7 +1,7 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.TartarCondition;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.TartarCondition;
 
 public record TartarRecordDTO(
   Long id,

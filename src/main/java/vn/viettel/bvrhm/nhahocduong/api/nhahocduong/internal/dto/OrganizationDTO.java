@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Grade;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.OrganizationType;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Grade;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.OrganizationType;
 
 import java.util.List;
 import java.util.Map;

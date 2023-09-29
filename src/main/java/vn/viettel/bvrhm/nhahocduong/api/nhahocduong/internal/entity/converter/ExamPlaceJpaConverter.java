@@ -2,7 +2,7 @@ package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.ExamPlace;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.ExamPlace;
 
 import java.util.stream.Stream;
 

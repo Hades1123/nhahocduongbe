@@ -6,6 +6,8 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.PlaqueCondition;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.TartarCondition;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.*;
 
 @Component

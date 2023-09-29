@@ -4,7 +4,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import java.util.stream.Stream;
 
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.TreatmentStatus;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.TreatmentStatus;
 
 @Converter
 public class TreatmentStatusJpaConverter implements AttributeConverter<TreatmentStatus, String> {

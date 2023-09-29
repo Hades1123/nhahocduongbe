@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.helper.OrganizationServiceHelper;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.helper.OrganizationHelper;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.OrganizationSearchCriteria;
@@ -24,8 +24,6 @@ import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.Organizatio
 
 import java.util.Collections;
 import java.util.List;
-
-import static java.util.Objects.nonNull;
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
@@ -42,6 +40,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
   @Autowired private AuthorizationService authorizationService;
 
+  @Autowired
+  private OrganizationHelper organizationHelper;
+
   public OrganizationDTO getOrganizationById(Long id) {
     Organization organization = organizationRepository.findById(id).orElse(null);
     return organizationMapper.toDto(organization);
@@ -50,7 +51,7 @@ public class OrganizationServiceImpl implements OrganizationService {
   @Transactional
   public OrganizationDTO createOrganization(OrganizationDTO organizationDTO) {
     // Check duplicate class
-    List<String> duplicateClasses = OrganizationServiceHelper.getDuplicateClassList(organizationDTO);
+    List<String> duplicateClasses = organizationHelper.getDuplicateClassList(organizationDTO);
     if (!duplicateClasses.isEmpty()) {
       throw new ResponseStatusException(
               HttpStatus.BAD_REQUEST, "Duplicated class(es): " + String.join(", ", duplicateClasses)
@@ -59,7 +60,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     var entity = organizationMapper.toEntity(organizationDTO);
 
-    entity.setCode(generateCode(organizationDTO));
+    entity.setCode(organizationHelper.generateCode(organizationDTO));
 
     organizationRepository.saveAndFlush(entity);
     entityManager.refresh(entity);
@@ -74,7 +75,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     ));
 
     // Check duplicate class
-    List<String> duplicateClasses = OrganizationServiceHelper.getDuplicateClassList(organizationDTO);
+    List<String> duplicateClasses = organizationHelper.getDuplicateClassList(organizationDTO);
     if (!duplicateClasses.isEmpty()) {
       throw new ResponseStatusException(
               HttpStatus.BAD_REQUEST, "Duplicated class(es): " + String.join(", ", duplicateClasses)
@@ -140,23 +141,6 @@ public class OrganizationServiceImpl implements OrganizationService {
                                                                              pageable);
 
     return organizations.map(organizationMapper::toDto);
-  }
-
-  private String generateCode(OrganizationDTO organizationDTO) {
-    StringBuilder codeBuilder = new StringBuilder();
-    codeBuilder.append(String.format("%03d", Integer.parseInt(organizationDTO.getAreaCode())));
-
-    // Get latest org code and increase 1, if not exist start with xxx001
-    Organization lastestOrganization = organizationRepository.findFirstByAreaCodeOrderByCodeDesc(organizationDTO.getAreaCode());
-    int orgOrderNumber;
-    if (nonNull(lastestOrganization)) {
-      orgOrderNumber = Integer.parseInt(lastestOrganization.getCode().substring(3, 6));
-    } else {
-      orgOrderNumber = 0;
-    }
-    codeBuilder.append(String.format("%03d", orgOrderNumber + 1));
-
-    return codeBuilder.toString();
   }
 
   @Override

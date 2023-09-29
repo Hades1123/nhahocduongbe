@@ -3,7 +3,7 @@ package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.DiseaseDTO;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.DiseaseService;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.impl.DiseaseServiceImpl;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.impl.ExamServiceImpl;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class DiseaseController {
   @Autowired private ExamServiceImpl examService;
-  @Autowired private DiseaseService diseaseService;
+  @Autowired private DiseaseServiceImpl diseaseService;
 
   @GetMapping("/patients/{patientId}/exams/{examId}/chronicConditions")
   public List<String> getChronicDiseaseListOfUserExam(

@@ -4,8 +4,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import java.util.stream.Stream;
 
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Ethnic;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.ExamPlace;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Ethnic;
 
 @Converter
 public class EthnicJpaConverter implements AttributeConverter<Ethnic, String> {

@@ -1,8 +1,7 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.converter;
 
 import jakarta.persistence.AttributeConverter;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.OrganizationType;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.PlaqueCondition;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.OrganizationType;
 
 import java.util.stream.Stream;
 

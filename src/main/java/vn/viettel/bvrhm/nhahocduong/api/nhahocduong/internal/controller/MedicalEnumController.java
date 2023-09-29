@@ -12,32 +12,37 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class MedicalEnumController {
-  @Autowired
-  private MedicalEnumService medicalEnumService;
+    @Autowired
+    private MedicalEnumService medicalEnumService;
 
-  @GetMapping("/tartarCondition")
-  List<TartarConditionDTO> getListTartarCondition() {
-    return medicalEnumService.getListTartarCondition();
-  }
-  @GetMapping("/plaqueCondition")
-  List<PlaqueConditionDTO> getListPlaqueConditionDTO() {
-    return medicalEnumService.getListPlaqueCondition();
-  }
-  @GetMapping("/toothProblem")
-  List<ToothProblemDTO> getListToothProblemDTO() {
-    return medicalEnumService.getListToothProblem();
-  }
-  @GetMapping("/toothSide")
-  List<ToothSideDTO> getListToothSideDTO() {
-    return medicalEnumService.getListToothSide();
-  }
-  @GetMapping("/toothTreatment")
-  List<ToothTreatmentDTO> getListToothTreatmentDTO() {
-    return medicalEnumService.getListToothTreatment();
-  }
-  @GetMapping("/ethnics")
-  List<EthnicDTO> getListEthnics() {
-    return medicalEnumService.getListEthnics();
-  }
+    @GetMapping("/tartarCondition")
+    List<TartarConditionDTO> getListTartarCondition() {
+        return medicalEnumService.getListTartarCondition();
+    }
+
+    @GetMapping("/plaqueCondition")
+    List<PlaqueConditionDTO> getListPlaqueConditionDTO() {
+        return medicalEnumService.getListPlaqueCondition();
+    }
+
+    @GetMapping("/toothProblem")
+    List<ToothProblemDTO> getListToothProblemDTO() {
+        return medicalEnumService.getListToothProblem();
+    }
+
+    @GetMapping("/toothSide")
+    List<ToothSideDTO> getListToothSideDTO() {
+        return medicalEnumService.getListToothSide();
+    }
+
+    @GetMapping("/toothTreatment")
+    List<ToothTreatmentDTO> getListToothTreatmentDTO() {
+        return medicalEnumService.getListToothTreatment();
+    }
+
+    @GetMapping("/ethnics")
+    List<EthnicDTO> getListEthnics() {
+        return medicalEnumService.getListEthnics();
+    }
 
 }

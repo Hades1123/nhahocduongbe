@@ -1,9 +1,9 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto;
 
 import lombok.Data;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.PrescriptionItem;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Tooth;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.ToothTreatment;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.PrescriptionItem;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Tooth;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.ToothTreatment;
 
 import java.io.Serializable;
 import java.util.List;

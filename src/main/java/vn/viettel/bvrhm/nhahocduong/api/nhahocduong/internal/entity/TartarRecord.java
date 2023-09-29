@@ -2,6 +2,7 @@ package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.TartarCondition;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.converter.TartarConditionJpaConverter;
 
 @Entity

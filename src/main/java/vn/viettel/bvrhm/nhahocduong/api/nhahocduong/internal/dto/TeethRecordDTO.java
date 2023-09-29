@@ -1,9 +1,9 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto;
 
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Tooth;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.ToothProblem;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.ToothSide;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.ToothTreatment;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Tooth;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.ToothProblem;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.ToothSide;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.ToothTreatment;
 
 import java.io.Serializable;
 import java.util.List;

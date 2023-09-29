@@ -1,8 +1,8 @@
-package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity;
+package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum TartarCondition {
+public enum PlaqueCondition {
   TOOTH_MISSING("4", "Không có răng"),
   CLEAN("0", "Không có vôi"),
   ONE_THIRD("1", "Vôi răng 1/3 cổ răng"),
@@ -11,10 +11,9 @@ public enum TartarCondition {
   ;
 
   private String code;
-
   private String description;
 
-  private TartarCondition(String code, String description) {
+  private PlaqueCondition(String code, String description) {
     this.code = code;
     this.description = description;
   }
@@ -23,8 +22,24 @@ public enum TartarCondition {
   public String getCode() {
     return this.code;
   }
+
 //  @JsonValue
   public String getDescription() {
     return this.description;
   }
 }
+
+// @Entity
+// @Data
+// @Table(name = "nhahocduong_plaque_condition")
+// public class PlagueCondition {
+//  @Id
+//  @Column(name = "id")
+//  private Long id;
+//
+//  @Column(name = "label")
+//  private String label;
+//
+//  @Column(name = "description")
+//  private String description;
+// }

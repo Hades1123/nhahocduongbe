@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Data;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Ethnic;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.converter.EthnicJpaConverter;
 
 @Entity

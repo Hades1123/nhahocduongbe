@@ -349,7 +349,7 @@ create table NHAHOCDUONG_PATIENT(
                                     health_insurance_number varchar,
                                     gender integer not null,
                                     birthdate date not null,
-                                    ethnic varchar not null,
+                                    ethnic varchar ,
                                     code varchar not null,
                                     area_type varchar,
                                     phone_number varchar,

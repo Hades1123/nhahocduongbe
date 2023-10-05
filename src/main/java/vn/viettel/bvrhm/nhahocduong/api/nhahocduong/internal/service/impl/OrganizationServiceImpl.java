@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.helper.OrganizationHelper;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.OrganizationSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Organization;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Patient;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.helper.OrganizationHelper;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper.OrganizationMapper;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository.OrganizationRepository;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository.PatientRepository;
@@ -24,6 +24,8 @@ import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.Organizatio
 
 import java.util.Collections;
 import java.util.List;
+
+import static java.util.Objects.nonNull;
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
@@ -52,7 +54,7 @@ public class OrganizationServiceImpl implements OrganizationService {
   public OrganizationDTO createOrganization(OrganizationDTO organizationDTO) {
     // Check duplicate class
     List<String> duplicateClasses = organizationHelper.getDuplicateClassList(organizationDTO);
-    if (!duplicateClasses.isEmpty()) {
+    if (nonNull(duplicateClasses) && !duplicateClasses.isEmpty()) {
       throw new ResponseStatusException(
               HttpStatus.BAD_REQUEST, "Duplicated class(es): " + String.join(", ", duplicateClasses)
       );
@@ -76,7 +78,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     // Check duplicate class
     List<String> duplicateClasses = organizationHelper.getDuplicateClassList(organizationDTO);
-    if (!duplicateClasses.isEmpty()) {
+    if (nonNull(duplicateClasses) && !duplicateClasses.isEmpty()) {
       throw new ResponseStatusException(
               HttpStatus.BAD_REQUEST, "Duplicated class(es): " + String.join(", ", duplicateClasses)
       );

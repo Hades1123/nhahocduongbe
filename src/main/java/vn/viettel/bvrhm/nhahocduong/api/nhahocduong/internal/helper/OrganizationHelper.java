@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -35,6 +36,8 @@ public class OrganizationHelper {
     public List<String> getDuplicateClassList(OrganizationDTO organizationDTO) {
         List<String> flattenClassList = getFlattenClassList(organizationDTO);
         Set<String> classes = new HashSet<>();
+
+        if (isNull(flattenClassList) || flattenClassList.isEmpty()) return null;
         return flattenClassList.stream().filter(clazz -> !classes.add(clazz.trim().toLowerCase())).toList();
     }
 

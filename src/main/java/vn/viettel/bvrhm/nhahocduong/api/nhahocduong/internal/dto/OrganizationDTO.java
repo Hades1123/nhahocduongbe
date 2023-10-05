@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Grade;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.OrganizationType;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrganizationDTO {
+public class OrganizationDTO implements Serializable {
     private Long id;
     private String name;
     private String address;

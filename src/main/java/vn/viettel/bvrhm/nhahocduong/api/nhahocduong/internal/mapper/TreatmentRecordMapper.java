@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING, uses = {ExamMapper.class})
 public interface TreatmentRecordMapper {
+    @Mapping(target = "exam", source = "examId")
     TreatmentRecord toEntity(TreatmentRecordDTO treatmentRecordDto);
 
     @Mapping(target = "examId", source = "exam.id")

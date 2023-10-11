@@ -41,8 +41,7 @@ public class OrganizationController {
 
     @GetMapping("/{id}")
     public OrganizationDTO getOrganizationById(@PathVariable Long id) {
-        OrganizationDTO dto = organizationService.getOrganizationById(id);
-        return dto;
+        return organizationService.getOrganizationById(id);
     }
     @DeleteMapping("/{id}")
     public boolean deleteOrganization(@PathVariable Long id){

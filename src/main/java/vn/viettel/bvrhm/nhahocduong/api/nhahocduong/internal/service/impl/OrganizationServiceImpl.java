@@ -99,7 +99,7 @@ public class OrganizationServiceImpl implements OrganizationService {
   @Transactional
   public boolean delete(Long id){
     List<Patient> patientList = patientRepository.findAllByOrganization_Id(id);
-    if(patientList.size() > 0){
+    if(nonNull(patientList) && patientList.size() > 0){
       throw new ResponseStatusException(
               HttpStatus.BAD_REQUEST, ResponseMessage.ORGANIZATION_CAN_NOT_DELETE_HAS_STUDENT
       );

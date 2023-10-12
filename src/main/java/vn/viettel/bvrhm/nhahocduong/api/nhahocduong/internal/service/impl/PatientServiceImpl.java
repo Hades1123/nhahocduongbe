@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -31,19 +32,23 @@ import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationServi
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationService.AuthorizationData;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.utils.ExcelUtil;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.ResponseMessage;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Ethnic;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.excel.ImportPatientExcelColumn;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.DiseaseDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.PatientDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.OrganizationSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.criteria.PatientSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Disease;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Exam;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Patient;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.excel.data.PatientExcelData;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.excel.enums.ImportPatientExcelColumn;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.helper.OrganizationHelper;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.helper.PatientHelper;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper.PatientMapper;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository.DiseaseRepository;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository.ExamRepository;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository.PatientRepository;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.OrganizationService;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.PatientService;
@@ -62,6 +67,7 @@ public class PatientServiceImpl implements PatientService {
   @Autowired private OrganizationHelper organizationHelper;
 
   @Autowired private PatientHelper patientHelper;
+  @Autowired private ExamRepository examRepository;
 
   @Override
   public PatientDTO getPatientById(Long id) {
@@ -79,15 +85,13 @@ public class PatientServiceImpl implements PatientService {
     if (isNull(schoolClassList)) {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND,
-          "Not found any class of school with Code " + patientDTO.organization().getCode());
+          ResponseMessage.ORGANIZATION_CANT_FOUND_CLASS_OF_SCHOOL
+              + patientDTO.organization().getCode());
     }
     if (!schoolClassList.contains(patientDTO.schoolClass())) {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND,
-          "Not found class "
-              + patientDTO.schoolClass()
-              + " in school with Code "
-              + patientDTO.organization().getCode());
+          ResponseMessage.ORGANIZATION_CANT_FOUND_CLASS + patientDTO.schoolClass());
     }
 
     var entity = patientMapper.toEntity(patientDTO);
@@ -120,16 +124,7 @@ public class PatientServiceImpl implements PatientService {
   }
 
   @Override
-  public List<PatientDTO> getPatientByCondition(
-      String searchText, String organizationName, List<String> schoolClass) {
-    List<Patient> patients =
-        patientRepository.findByCondition(searchText, organizationName, schoolClass);
-
-    return patientMapper.toDtoList(patients);
-  }
-
-  @Override
-  public Page<PatientDTO> getPagePatientByCondition(
+  public Page<PatientDTO> getPatientsByCondition(
       PatientSearchCriteria searchCriteria, Pageable pageable) {
     AuthorizationData authData = authorizationService.authorize();
     if (nonNull(authData.getAreaCode())) {
@@ -150,6 +145,7 @@ public class PatientServiceImpl implements PatientService {
             authData.getOrganizationId(),
             areaCodesInside,
             searchCriteria.getSchoolClass(),
+            searchCriteria.isStatus(),
             pageable);
 
     return patients.map(patientMapper::toDto);
@@ -164,6 +160,13 @@ public class PatientServiceImpl implements PatientService {
   @Override
   public boolean deletePatientById(Long id) {
     Patient patient = patientRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    List<Exam> exams = examRepository.getExamsByPatientIdAndStatusOrderByIdDesc(id, true);
+
+    if (nonNull(exams) && !exams.isEmpty()) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, ResponseMessage.PATIENT_CANT_DELETE_HAS_EXAMS);
+    }
+
     patient.setStatus(false);
     patientRepository.save(patient);
     return true;
@@ -174,15 +177,13 @@ public class PatientServiceImpl implements PatientService {
   public List<PatientDTO> importPatientsFromExcel(MultipartFile file) throws IOException {
     Sheet sheet = ExcelUtil.getSheetFromExcel(file.getInputStream(), 0);
 
-    List<PatientDTO> patientDTOList = extractPatientDataFromSheet(sheet);
-    return patientDTOList.stream().map(this::createPatient).toList();
+    List<PatientExcelData> patientExcelData = extractPatientDataFromSheet(sheet);
+    return patientExcelData.stream().map(patientMapper::toDto).map(this::createPatient).toList();
   }
 
   @Override
   public byte[] generateExcelTemplateFile(HttpServletResponse response) throws IOException {
     ClassLoader cl = this.getClass().getClassLoader();
-    //    FileInputStream inputStream = new FileInputStream(new
-    // ClassPathResource("template/excel/Import_Hocsinh.xlsx").getFile());
     try (InputStream is = cl.getResourceAsStream("template/excel/Import_Hocsinh.xlsx")) {
       List<OrganizationDTO> organizationDTOList =
           organizationService.search(new OrganizationSearchCriteria(), null).toList();
@@ -228,7 +229,8 @@ public class PatientServiceImpl implements PatientService {
 
       // Setup response header and write file's data
       response.setContentType(MediaType.APPLICATION_XML_VALUE);
-      response.setHeader("Content-Disposition", "attachment; filename=Import_Hocsinh.xlsx");
+      response.setHeader(
+          HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Import_Hocsinh.xlsx");
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       workbook.write(outputStream);
       workbook.close();
@@ -239,8 +241,8 @@ public class PatientServiceImpl implements PatientService {
     }
   }
 
-  private List<PatientDTO> extractPatientDataFromSheet(Sheet sheet) {
-    List<PatientDTO> patientDTOList = new ArrayList<>();
+  private List<PatientExcelData> extractPatientDataFromSheet(Sheet sheet) {
+    List<PatientExcelData> patientsData = new ArrayList<>();
     for (Row row : sheet) {
       if (row.getRowNum() == 0) {
         // Ignore header
@@ -250,7 +252,7 @@ public class PatientServiceImpl implements PatientService {
       Iterator<Cell> cellIterator = row.cellIterator();
 
       // Read cells and set value for object
-      PatientDTO.PatientDTOBuilder patientDTOBuilder = PatientDTO.builder();
+      PatientExcelData.PatientExcelDataBuilder patientExcelDataBuilder = PatientExcelData.builder();
       while (cellIterator.hasNext()) {
         // Read cell
         Cell cell = cellIterator.next();
@@ -281,40 +283,42 @@ public class PatientServiceImpl implements PatientService {
           continue;
         }
 
-        // Set value for object
+        // Set value for object based on column
         switch (column) {
-          case FULL_NAME -> patientDTOBuilder.fullName(cellValue);
+          case FULL_NAME -> patientExcelDataBuilder.fullName(cellValue);
           case BIRTHDAY -> {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MMM dd HH:mm:ss z yyyy");
             LocalDate date = LocalDate.parse(cellValue, formatter);
-
-            //            LocalDate date = new
-            // Date(cellValue).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            patientDTOBuilder.birthDate(date);
+            patientExcelDataBuilder.birthDate(date);
           }
-          case GENDER -> patientDTOBuilder.gender(Integer.parseInt(cellValue.replace(".0", "")));
-          case CLASS -> patientDTOBuilder.schoolClass(cellValue);
+          case GENDER -> patientExcelDataBuilder.gender(
+              Integer.parseInt(cellValue.split("\\.")[0]));
+          case CLASS -> patientExcelDataBuilder.schoolClass(cellValue);
           case SCHOOL_CODE -> {
             OrganizationDTO organizationDTO = organizationService.getOrganizationByCode(cellValue);
             if (isNull(organizationDTO)) {
               throw new ResponseStatusException(
                   HttpStatus.BAD_REQUEST,
-                  "[Row " + row.getRowNum() + "]: Can't found organization with code " + cellValue);
+                  "[Row "
+                      + row.getRowNum()
+                      + "]: "
+                      + ResponseMessage.ORGANIZATION_NOT_FOUND_WITH_CODE
+                      + cellValue);
             }
 
-            patientDTOBuilder.organization(organizationDTO);
+            patientExcelDataBuilder.organization(organizationDTO);
           }
-          case AREA_TYPE -> patientDTOBuilder.areaType(cellValue);
-          case NATIONAL_ID_NUMBER -> patientDTOBuilder.nationalIdNum(cellValue);
-          case ETHNIC -> patientDTOBuilder.ethnic(Ethnic.getByDescription(cellValue));
-          case HEALTH_INSURANCE_NUMBER -> patientDTOBuilder.healthInsuranceNumber(cellValue);
-          case CARE_TAKER -> patientDTOBuilder.careTaker(cellValue);
+          case AREA_TYPE -> patientExcelDataBuilder.areaType(cellValue);
+          case NATIONAL_ID_NUMBER -> patientExcelDataBuilder.nationalIdNum(cellValue);
+          case ETHNIC -> patientExcelDataBuilder.ethnic(Ethnic.getByDescription(cellValue));
+          case HEALTH_INSURANCE_NUMBER -> patientExcelDataBuilder.healthInsuranceNumber(cellValue);
+          case CARE_TAKER -> patientExcelDataBuilder.careTaker(cellValue);
         }
       }
 
-      patientDTOList.add(patientDTOBuilder.build());
+      patientsData.add(patientExcelDataBuilder.build());
     }
 
-    return patientDTOList;
+    return patientsData;
   }
 }

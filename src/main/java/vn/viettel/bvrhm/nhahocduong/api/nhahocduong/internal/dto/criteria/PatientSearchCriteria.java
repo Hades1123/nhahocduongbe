@@ -8,8 +8,9 @@ import lombok.Data;
  */
 @Data
 public class PatientSearchCriteria {
-  String searchText;
-  String organizationName;
-  String areaCode;
-  String schoolClass;
+  private String searchText;
+  private String organizationName;
+  private String areaCode;
+  private String schoolClass;
+  private boolean status = true;
 }

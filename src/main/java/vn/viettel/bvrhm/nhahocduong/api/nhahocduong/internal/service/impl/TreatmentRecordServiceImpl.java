@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.ResponseMessage;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.ExamDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.TreatmentRecordDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.TreatmentRecord;
@@ -76,7 +77,8 @@ public class TreatmentRecordServiceImpl implements TreatmentRecordService {
   public boolean deleteTreatmentRecord(Long examId, Long treatmentRecordId) {
     ExamDTO examDTO = examService.getExamByIdAndStatus(examId, true);
     if (isNull(examDTO)) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found exam with ID " + examId);
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND, ResponseMessage.EXAM_NOT_FOUND_WITH_ID + examId);
     }
 
     examDTO.getTreatmentRecords().stream()
@@ -86,10 +88,7 @@ public class TreatmentRecordServiceImpl implements TreatmentRecordService {
             () -> {
               throw new ResponseStatusException(
                   HttpStatus.NOT_FOUND,
-                  "Not found treatment record ID "
-                      + treatmentRecordId
-                      + " in the exam with ID "
-                      + examId);
+                  ResponseMessage.TREATMENT_RECORD_NOT_FOUND_WITH_ID + treatmentRecordId);
             });
 
     TreatmentRecord treatmentRecord = treatmentRecordRepository.getReferenceById(treatmentRecordId);

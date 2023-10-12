@@ -20,10 +20,7 @@ public interface PatientService {
 
   PatientDTO updatePatient(PatientDTO patientDTO, Long id);
 
-  List<PatientDTO> getPatientByCondition(
-      String searchText, String organizationName, List<String> schoolClass);
-
-  Page<PatientDTO> getPagePatientByCondition(
+  Page<PatientDTO> getPatientsByCondition(
       PatientSearchCriteria searchCriteria, Pageable pageable);
 
   Page<PatientDTO> getAllPatients(Pageable pageable);

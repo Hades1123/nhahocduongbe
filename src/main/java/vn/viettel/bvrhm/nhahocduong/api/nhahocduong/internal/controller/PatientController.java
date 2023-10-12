@@ -30,7 +30,7 @@ public class PatientController {
   @GetMapping("/patient/search")
   public Page<PatientDTO> getPatientsByCondition(
       PatientSearchCriteria patientSearchCriteria, Pageable pageable) {
-    return patientService.getPagePatientByCondition(patientSearchCriteria, pageable);
+    return patientService.getPatientsByCondition(patientSearchCriteria, pageable);
   }
 
   @PutMapping("/patient/{id}")
@@ -48,14 +48,6 @@ public class PatientController {
   public boolean deletePatientById(@PathVariable Long id) {
     return patientService.deletePatientById(id);
   }
-
-  //  @GetMapping("/patients/search/getByCondition")
-  //  public List<PatientDTO> getPatientsByCondition(
-  //      @RequestParam(name = "searchText",required = false) String searchText,
-  //      @RequestParam(name = "organizationName",required = false) String organizationName,
-  //      @RequestParam(name = "schoolClass",required = false) List<String> schoolClass) {
-  //    return patientService.getPatientByCondition(searchText, organizationName, schoolClass);
-  //  }
 
   @GetMapping("/patient")
   public Page<PatientDTO> getPatientsAll(Pageable pageable) {

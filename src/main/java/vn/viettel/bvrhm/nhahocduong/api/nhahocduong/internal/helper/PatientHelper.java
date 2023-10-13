@@ -25,7 +25,7 @@ public class PatientHelper {
   public String generateCode(PatientDTO patientDTO) {
     // Get org code
     OrganizationDTO organization =
-        organizationService.getOrganizationById(patientDTO.organization().getId());
+        organizationService.getOrganizationById(patientDTO.getOrganization().getId());
     if (organization == null)
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Organization not found!");
 

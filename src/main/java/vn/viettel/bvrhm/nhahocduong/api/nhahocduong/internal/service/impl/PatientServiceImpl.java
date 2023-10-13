@@ -80,18 +80,18 @@ public class PatientServiceImpl implements PatientService {
   public PatientDTO createPatient(PatientDTO patientDTO) {
     // Check organization class and patient class
     OrganizationDTO organizationDTO =
-        organizationService.getOrganizationById(patientDTO.organization().getId());
+        organizationService.getOrganizationById(patientDTO.getOrganization().getId());
     List<String> schoolClassList = organizationHelper.getFlattenClassList(organizationDTO);
     if (isNull(schoolClassList)) {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND,
           ResponseMessage.ORGANIZATION_CANT_FOUND_CLASS_OF_SCHOOL
-              + patientDTO.organization().getCode());
+              + patientDTO.getOrganization().getCode());
     }
-    if (!schoolClassList.contains(patientDTO.schoolClass())) {
+    if (!schoolClassList.contains(patientDTO.getSchoolClass())) {
       throw new ResponseStatusException(
           HttpStatus.NOT_FOUND,
-          ResponseMessage.ORGANIZATION_CANT_FOUND_CLASS + patientDTO.schoolClass());
+          ResponseMessage.ORGANIZATION_CANT_FOUND_CLASS + patientDTO.getSchoolClass());
     }
 
     var entity = patientMapper.toEntity(patientDTO);
@@ -111,9 +111,9 @@ public class PatientServiceImpl implements PatientService {
 
     // TODO: optimize this
     List<Disease> chronicConditions = null;
-    if (patientDTO.chronicConditions() != null && !patientDTO.chronicConditions().isEmpty()) {
+    if (patientDTO.getChronicConditions() != null && !patientDTO.getChronicConditions().isEmpty()) {
       List<Long> updateChronicConditionIds =
-          patientDTO.chronicConditions().stream().map(DiseaseDTO::id).toList();
+          patientDTO.getChronicConditions().stream().map(DiseaseDTO::id).toList();
       chronicConditions = diseaseRepository.findAllById(updateChronicConditionIds);
     }
     entity.setChronicConditions(chronicConditions);

@@ -32,4 +32,12 @@ management:
   endpoints:
     web:
       exposure:
-        include: '*'
+        include:
+          - prometheus
+#        include: '*'
+logging:
+  file:
+    path: /var/log
+    name: /var/log/nhd.log
+  level:
+    org: ERROR

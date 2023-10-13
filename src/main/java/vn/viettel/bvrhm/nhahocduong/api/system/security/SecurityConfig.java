@@ -30,7 +30,9 @@ public class SecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth -> {
-              auth.requestMatchers("/api/auth/login")
+              auth.requestMatchers("/actuator/**")
+                  .permitAll()
+                  .requestMatchers("/api/auth/login")
                   .permitAll()
                   .requestMatchers("/api/user/register")
                   .permitAll()

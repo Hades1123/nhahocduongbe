@@ -1,10 +1,7 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.criteria;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import lombok.Data;
-
 import java.time.LocalDate;
+import lombok.Data;
 
 /**
  * @author: longlb1

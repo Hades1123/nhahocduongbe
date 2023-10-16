@@ -1,12 +1,11 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service;
 
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.criteria.ExamSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.ExamDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Exam;
-
-import java.util.List;
 
 /**
  * @author: longlb1

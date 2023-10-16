@@ -7,7 +7,7 @@ public enum ExamPlace {
   TYT_TTYT("TYT/TTYT"),
   ;
 
-  private String code;
+  private final String code;
 
   ExamPlace(String code) {
     this.code = code;

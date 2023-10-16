@@ -6,11 +6,9 @@ import lombok.Data;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Tooth;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.ToothTreatment;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.PrescriptionItem;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.TreatmentRecord;
 
-/**
- * A DTO for the {@link
- * vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.TreatmentRecord} entity
- */
+/** A DTO for the {@link TreatmentRecord} entity */
 @Data
 public class TreatmentRecordDTO implements Serializable {
   Long id;

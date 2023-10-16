@@ -1,9 +1,7 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service;
 
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.DiseaseDTO;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Disease;
-
 import java.util.List;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.DiseaseDTO;
 
 /**
  * @author: longlb1

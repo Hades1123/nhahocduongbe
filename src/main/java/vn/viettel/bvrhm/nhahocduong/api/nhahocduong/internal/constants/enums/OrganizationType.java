@@ -12,8 +12,8 @@ public enum OrganizationType {
   MINISTRY(3, "Bộ"),
   HCMC_CENTRAL_DENTAL_HOSPITAL(4, "Bệnh viện Răng hàm mặt trung ương TP. Hồ Chí Minh");
 
-  private Integer code;
-  private String name;
+  private final Integer code;
+  private final String name;
 
   OrganizationType(int code, String name) {
     this.code = code;

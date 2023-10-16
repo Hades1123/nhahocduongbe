@@ -7,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.criteria.ExamSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.ExamDTO;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.criteria.OrganizationSearchCriteria;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Exam;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.ExamService;
 
 @RestController
@@ -70,8 +68,7 @@ public class ExamController {
   }
 
   @GetMapping("/exams/search")
-  public Page<ExamDTO> search(
-          ExamSearchCriteria searchCriteria, Pageable pageable) {
+  public Page<ExamDTO> search(ExamSearchCriteria searchCriteria, Pageable pageable) {
     return examService.search(searchCriteria, pageable);
   }
 }

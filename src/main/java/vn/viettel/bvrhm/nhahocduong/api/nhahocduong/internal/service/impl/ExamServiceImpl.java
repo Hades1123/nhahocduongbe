@@ -205,7 +205,6 @@ public class ExamServiceImpl implements ExamService {
 
   @Override
   public Page<ExamDTO> search(ExamSearchCriteria searchCriteria, Pageable pageable) {
-//    Page<Exam> exams = examRepository.search(searchCriteria.getId(), searchCriteria.getFromDate(), searchCriteria.getToDate(), searchCriteria.isStatus());
     Page<Exam> exams = examRepository.search(searchCriteria, pageable);
     List<ExamDTO> examDTOList = exams.getContent().stream().map(examMapper::toDto).toList();
     return new PageImpl<>(examDTOList, pageable, exams.getTotalElements());

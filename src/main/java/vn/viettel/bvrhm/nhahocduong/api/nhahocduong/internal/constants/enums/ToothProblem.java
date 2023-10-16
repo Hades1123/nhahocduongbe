@@ -15,8 +15,8 @@ public enum ToothProblem {
   OTHERS("9", "Loại trừ"), // Loai tru
   ;
 
-  private String code;
-  private String description;
+  private final String code;
+  private final String description;
 
   ToothProblem(String code, String description) {
     this.code = code;

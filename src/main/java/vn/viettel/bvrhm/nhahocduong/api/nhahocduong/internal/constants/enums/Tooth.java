@@ -73,5 +73,4 @@ public enum Tooth {
   public String getCode() {
     return this.code;
   }
-  ;
 }

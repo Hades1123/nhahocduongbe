@@ -1,6 +1,5 @@
 package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository;
 
-import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,18 +17,19 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
 
   Exam findExamByIdAndStatus(Long id, boolean status);
 
-//  @Query("""
-//    SELECT e
-//    FROM Exam e
-//    WHERE
-//      (:id IS NULL OR e.id = :id)
-//      AND (:fromDate IS NULL OR e.date >= :fromDate)
-//      AND (:toDate IS NULL OR e.date <= :toDate)
-//      AND e.status = :status
-//  """)
-//  Page<Exam> search(Long id, LocalDate fromDate, LocalDate toDate, boolean status);
+  //  @Query("""
+  //    SELECT e
+  //    FROM Exam e
+  //    WHERE
+  //      (:id IS NULL OR e.id = :id)
+  //      AND (:fromDate IS NULL OR e.date >= :fromDate)
+  //      AND (:toDate IS NULL OR e.date <= :toDate)
+  //      AND e.status = :status
+  //  """)
+  //  Page<Exam> search(Long id, LocalDate fromDate, LocalDate toDate, boolean status);
 
-  @Query("""
+  @Query(
+      """
     SELECT e
     FROM Exam e
     WHERE

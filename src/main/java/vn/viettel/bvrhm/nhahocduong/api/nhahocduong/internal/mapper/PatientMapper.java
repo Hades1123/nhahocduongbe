@@ -4,9 +4,9 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.excel.PatientExcelData;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.PatientDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Patient;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.excel.data.PatientExcelData;
 
 @Mapper(
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
@@ -15,6 +15,7 @@ public interface PatientMapper {
   Patient toEntity(PatientDTO patientDTO);
 
   PatientDTO toDto(Patient patient);
+
   PatientDTO toDto(PatientExcelData patientExcelData);
 
   List<PatientDTO> toDtoList(List<Patient> patientList);

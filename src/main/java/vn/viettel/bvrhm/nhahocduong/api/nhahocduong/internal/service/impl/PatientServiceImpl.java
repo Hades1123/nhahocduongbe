@@ -9,13 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,17 +28,14 @@ import vn.viettel.bvrhm.nhahocduong.api.auth.internal.service.AuthorizationServi
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.service.AreaService;
 import vn.viettel.bvrhm.nhahocduong.api.common.internal.utils.ExcelUtil;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.ResponseMessage;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.constants.enums.Ethnic;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.criteria.PatientSearchCriteria;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.excel.PatientExcelData;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.DiseaseDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.OrganizationDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.PatientDTO;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.criteria.OrganizationSearchCriteria;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.criteria.PatientSearchCriteria;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Disease;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Exam;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Patient;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.excel.data.PatientExcelData;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.excel.enums.ImportPatientExcelColumn;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.helper.OrganizationHelper;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.helper.PatientHelper;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.mapper.PatientMapper;
@@ -177,60 +169,22 @@ public class PatientServiceImpl implements PatientService {
   public List<PatientDTO> importPatientsFromExcel(MultipartFile file) throws IOException {
     Sheet sheet = ExcelUtil.getSheetFromExcel(file.getInputStream(), 0);
 
-    List<PatientExcelData> patientExcelData = extractPatientDataFromSheet(sheet);
+    List<PatientExcelData> patientExcelData = patientHelper.extractPatientDataFromSheet(sheet);
     return patientExcelData.stream().map(patientMapper::toDto).map(this::createPatient).toList();
   }
 
   @Override
   public byte[] generateExcelTemplateFile(HttpServletResponse response) throws IOException {
+    final String fileName = "Import_Hocsinh.xlsx";
+    final String filePath = "template/excel/";
     ClassLoader cl = this.getClass().getClassLoader();
-    try (InputStream is = cl.getResourceAsStream("template/excel/Import_Hocsinh.xlsx")) {
-      List<OrganizationDTO> organizationDTOList =
-          organizationService.search(new OrganizationSearchCriteria(), null).toList();
+    try (InputStream is = cl.getResourceAsStream(filePath + fileName)) {
       XSSFWorkbook workbook = new XSSFWorkbook(is);
-      XSSFSheet sheet = workbook.getSheetAt(1);
-
-      for (int i = 0; i < organizationDTOList.size(); i++) {
-        OrganizationDTO organizationData = organizationDTOList.get(i);
-        // Create row
-        XSSFRow row = sheet.createRow(i + 1);
-
-        // Insert data
-        row.createCell(0).setCellValue(i + 1);
-        if (nonNull(organizationData.getAreaCode())) {
-          row.createCell(1).setCellValue(organizationData.getAreaCode());
-        }
-        if (nonNull(organizationData.getAddress())) {
-          row.createCell(2).setCellValue(organizationData.getAddress());
-        }
-        if (nonNull(organizationData.getCode())) {
-          row.createCell(3).setCellValue(organizationData.getCode());
-        }
-        if (nonNull(organizationData.getName())) {
-          row.createCell(4).setCellValue(organizationData.getName());
-        }
-        if (nonNull(organizationHelper.getFlattenClassList(organizationData))) {
-          row.createCell(5)
-              .setCellValue(
-                  String.join(",", organizationHelper.getFlattenClassList(organizationData)));
-        }
-      }
-      // Style sheet
-      // Style normal rows
-      XSSFCellStyle normalCellStyle = workbook.createCellStyle();
-      normalCellStyle.setBorderTop(BorderStyle.THIN);
-      normalCellStyle.setBorderBottom(BorderStyle.THIN);
-      normalCellStyle.setBorderLeft(BorderStyle.THIN);
-      normalCellStyle.setBorderRight(BorderStyle.THIN);
-      normalCellStyle.setAlignment(HorizontalAlignment.CENTER);
-      normalCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-      ExcelUtil.addStyleForCells(sheet, normalCellStyle, 0, 5, 1, organizationDTOList.size());
-      ExcelUtil.autoSizeColumns(sheet, 6);
+      patientHelper.populateOrganizationCategorySheet(workbook);
 
       // Setup response header and write file's data
       response.setContentType(MediaType.APPLICATION_XML_VALUE);
-      response.setHeader(
-          HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Import_Hocsinh.xlsx");
+      response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       workbook.write(outputStream);
       workbook.close();
@@ -241,84 +195,26 @@ public class PatientServiceImpl implements PatientService {
     }
   }
 
-  private List<PatientExcelData> extractPatientDataFromSheet(Sheet sheet) {
-    List<PatientExcelData> patientsData = new ArrayList<>();
-    for (Row row : sheet) {
-      if (row.getRowNum() == 0) {
-        // Ignore header
-        continue;
-      }
+  @Override
+  public byte[] exportPatients(HttpServletResponse response) throws IOException {
+    final String fileName = "Export_Hocsinh.xlsx";
+    final String filePath = "template/excel/";
+    ClassLoader cl = this.getClass().getClassLoader();
+    try (InputStream is = cl.getResourceAsStream(filePath + fileName)) {
+      XSSFWorkbook workbook = new XSSFWorkbook(is);
+      patientHelper.populateOrganizationCategorySheet(workbook);
+      patientHelper.populatePatientsSheet(workbook);
 
-      Iterator<Cell> cellIterator = row.cellIterator();
-
-      // Read cells and set value for object
-      PatientExcelData.PatientExcelDataBuilder patientExcelDataBuilder = PatientExcelData.builder();
-      while (cellIterator.hasNext()) {
-        // Read cell
-        Cell cell = cellIterator.next();
-        String cellValue = null;
-        if (nonNull(ExcelUtil.getCellValue(cell))) {
-          cellValue = String.valueOf(ExcelUtil.getCellValue(cell));
-        }
-
-        // Indicate Column
-        int columnIndex = cell.getColumnIndex();
-        ImportPatientExcelColumn column = ImportPatientExcelColumn.getByIndex(columnIndex);
-        if (Objects.isNull(column)) {
-          continue;
-        }
-
-        // Check cell
-        if (cellValue == null || cellValue.isEmpty()) {
-          if (column.isRequired()) {
-            throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Required field '"
-                    + column.getHeader()
-                    + "' of row "
-                    + row.getRowNum()
-                    + 1
-                    + " is missing");
-          }
-          continue;
-        }
-
-        // Set value for object based on column
-        switch (column) {
-          case FULL_NAME -> patientExcelDataBuilder.fullName(cellValue);
-          case BIRTHDAY -> {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MMM dd HH:mm:ss z yyyy");
-            LocalDate date = LocalDate.parse(cellValue, formatter);
-            patientExcelDataBuilder.birthDate(date);
-          }
-          case GENDER -> patientExcelDataBuilder.gender(
-              Integer.parseInt(cellValue.split("\\.")[0]));
-          case CLASS -> patientExcelDataBuilder.schoolClass(cellValue);
-          case SCHOOL_CODE -> {
-            OrganizationDTO organizationDTO = organizationService.getOrganizationByCode(cellValue);
-            if (isNull(organizationDTO)) {
-              throw new ResponseStatusException(
-                  HttpStatus.BAD_REQUEST,
-                  "[Row "
-                      + row.getRowNum()
-                      + "]: "
-                      + ResponseMessage.ORGANIZATION_NOT_FOUND_WITH_CODE
-                      + cellValue);
-            }
-
-            patientExcelDataBuilder.organization(organizationDTO);
-          }
-          case AREA_TYPE -> patientExcelDataBuilder.areaType(cellValue);
-          case NATIONAL_ID_NUMBER -> patientExcelDataBuilder.nationalIdNum(cellValue);
-          case ETHNIC -> patientExcelDataBuilder.ethnic(Ethnic.getByDescription(cellValue));
-          case HEALTH_INSURANCE_NUMBER -> patientExcelDataBuilder.healthInsuranceNumber(cellValue);
-          case CARE_TAKER -> patientExcelDataBuilder.careTaker(cellValue);
-        }
-      }
-
-      patientsData.add(patientExcelDataBuilder.build());
+      // Setup response header and write file's data
+      response.setContentType(MediaType.APPLICATION_XML_VALUE);
+      response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      workbook.write(outputStream);
+      workbook.close();
+      return outputStream.toByteArray();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
     }
-
-    return patientsData;
   }
 }

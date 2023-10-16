@@ -10,8 +10,8 @@ public enum Ethnic {
   KHMER(4, "Khơme"),
   OTHER(5, "Khác");
 
-  private Integer code;
-  private String description;
+  private final Integer code;
+  private final String description;
 
   Ethnic(Integer code, String description) {
     this.code = code;

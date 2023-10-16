@@ -8,13 +8,15 @@ public final class ResponseMessage {
   // Organization
   public static final String ORGANIZATION_DUPLICATE_CLASS = "Duplicate class(es): ";
   public static final String ORGANIZATION_NOT_FOUND_WITH_ID = "Can't find organization with ID ";
-  public static final String ORGANIZATION_NOT_FOUND_WITH_CODE = "Can't find organization with code ";
+  public static final String ORGANIZATION_NOT_FOUND_WITH_CODE =
+      "Can't find organization with code ";
   public static final String ORGANIZATION_CANT_DELETE_HAS_STUDENT =
       "Can't delete organization which has student";
   public static final String ORGANIZATION_CANT_DELETE_CLASS_HAS_STUDENT =
       "Can't delete class which has student";
 
-  public static final String ORGANIZATION_CANT_FOUND_CLASS_OF_SCHOOL = "Not found any class of school with Code ";
+  public static final String ORGANIZATION_CANT_FOUND_CLASS_OF_SCHOOL =
+      "Not found any class of school with Code ";
   public static final String ORGANIZATION_CANT_FOUND_CLASS = "Can't found class ";
 
   // Exam
@@ -23,7 +25,8 @@ public final class ResponseMessage {
       "Can't find exam for the student with ID ";
 
   // Treatment Record
-  public static final String TREATMENT_RECORD_NOT_FOUND_WITH_ID = "Can't find treatment record with ID ";
+  public static final String TREATMENT_RECORD_NOT_FOUND_WITH_ID =
+      "Can't find treatment record with ID ";
 
   // Patient
   public static final String PATIENT_CANT_DELETE_HAS_EXAMS = "Can't delete student who has exams";

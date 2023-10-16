@@ -10,10 +10,10 @@ public enum PlaqueCondition {
   TWO_THIRD_OR_MORE("3", "Vôi răng > 2/3 răng"),
   ;
 
-  private String code;
-  private String description;
+  private final String code;
+  private final String description;
 
-  private PlaqueCondition(String code, String description) {
+  PlaqueCondition(String code, String description) {
     this.code = code;
     this.description = description;
   }

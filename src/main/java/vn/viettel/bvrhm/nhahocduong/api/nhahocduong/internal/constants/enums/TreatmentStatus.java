@@ -7,9 +7,9 @@ public enum TreatmentStatus {
   TRANSFER("Chuyển TYT/TTYT"),
   ;
 
-  private String description;
+  private final String description;
 
-  private TreatmentStatus(String description) {
+  TreatmentStatus(String description) {
     this.description = description;
   }
 

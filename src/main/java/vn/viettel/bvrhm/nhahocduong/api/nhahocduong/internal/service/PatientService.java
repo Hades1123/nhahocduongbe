@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
-import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.PatientDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.criteria.PatientSearchCriteria;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.PatientDTO;
 
 /**
  * @author: longlb1
@@ -20,8 +20,7 @@ public interface PatientService {
 
   PatientDTO updatePatient(PatientDTO patientDTO, Long id);
 
-  Page<PatientDTO> getPatientsByCondition(
-      PatientSearchCriteria searchCriteria, Pageable pageable);
+  Page<PatientDTO> getPatientsByCondition(PatientSearchCriteria searchCriteria, Pageable pageable);
 
   Page<PatientDTO> getAllPatients(Pageable pageable);
 
@@ -30,4 +29,6 @@ public interface PatientService {
   List<PatientDTO> importPatientsFromExcel(MultipartFile file) throws IOException;
 
   byte[] generateExcelTemplateFile(HttpServletResponse response) throws IOException;
+
+  byte[] exportPatients(HttpServletResponse response) throws IOException;
 }

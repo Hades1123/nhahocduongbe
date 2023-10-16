@@ -13,8 +13,8 @@ public enum ToothTreatment {
   SEALANT("F", "Sealants"),
   PREVENTATIVE_FILLING("P", "Trám phòng ngừa");
 
-  private String code;
-  private String description;
+  private final String code;
+  private final String description;
 
   ToothTreatment(String code, String description) {
     this.code = code;

@@ -10,8 +10,8 @@ public enum ToothSide {
   FAR("X", "Mặt xa"), // Mặt xa
   ;
 
-  private String code;
-  private String description;
+  private final String code;
+  private final String description;
 
   ToothSide(String code, String description) {
     this.code = code;

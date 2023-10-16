@@ -1,4 +1,4 @@
-package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.excel.data;
+package vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.excel;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -24,5 +24,5 @@ public record PatientExcelData(
     OrganizationDTO organization,
     String schoolClass,
     String nationalIdNum,
-    String careTaker
-) implements Serializable {}
+    String careTaker)
+    implements Serializable {}

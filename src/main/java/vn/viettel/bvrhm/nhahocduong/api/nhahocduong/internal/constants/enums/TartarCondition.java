@@ -10,11 +10,11 @@ public enum TartarCondition {
   TWO_THIRD_OR_MORE("3", "Vôi răng > 2/3 răng"),
   ;
 
-  private String code;
+  private final String code;
 
-  private String description;
+  private final String description;
 
-  private TartarCondition(String code, String description) {
+  TartarCondition(String code, String description) {
     this.code = code;
     this.description = description;
   }

@@ -9,8 +9,18 @@ import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Exam;
 @Mapper(
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
     componentModel = MappingConstants.ComponentModel.SPRING,
-    uses = {ReferenceMapper.class})
+    uses = {
+      ReferenceMapper.class,
+      OrganizationMapper.class,
+      PatientMapper.class,
+      DentistMapper.class
+    })
 public interface ExamMapper {
+  @Mappings({
+    @Mapping(target = "organization", source = "organizationId"),
+    @Mapping(target = "patient", source = "patientId"),
+    @Mapping(target = "dentist", source = "dentistId"),
+  })
   Exam toEntity(ExamDTO examDTO);
 
   Exam toEntity(Long id);

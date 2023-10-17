@@ -48,17 +48,17 @@ public class Exam extends BaseEntity {
   @Column(name = "date")
   private LocalDate date;
 
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "teeth_record_id")
   @Where(clause = "status = true")
   private TeethRecord teethRecord;
 
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "plaque_record_id")
   @Where(clause = "status = true")
   private PlaqueRecord plaqueRecord;
 
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "tartar_record_id")
   @Where(clause = "status = true")
   private TartarRecord tartarRecord;

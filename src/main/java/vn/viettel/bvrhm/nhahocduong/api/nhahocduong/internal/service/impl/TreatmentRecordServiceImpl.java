@@ -34,11 +34,6 @@ public class TreatmentRecordServiceImpl implements TreatmentRecordService {
   @Autowired TreatmentRecordMapper treatmentRecordMapper;
 
   @Override
-  @Retryable(
-      retryFor = CannotAcquireLockException.class,
-      maxAttempts = 5,
-      backoff = @Backoff(delay = 300))
-  @Transactional(isolation = Isolation.SERIALIZABLE)
   public List<TreatmentRecordDTO> upsertTreatmentRecordsByExamIdAndPatientId(
       Long examId, Long patientId, List<TreatmentRecordDTO> treatmentRecordDTOS) {
     ExamDTO examDTO = examService.getExamByIdAndPatientIdAndStatus(examId, patientId, true);

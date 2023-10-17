@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ReferenceMapper {
-
   @PersistenceContext private EntityManager entityManager;
 
   @ObjectFactory

@@ -15,7 +15,7 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
 
   Exam findExamByIdAndPatientId(Long id, Long patientId);
 
-  Exam findExamByIdAndPatientIdAndStatus(Long id, Long patientId,boolean status);
+  Exam findExamByIdAndPatientIdAndStatus(Long id, Long patientId, boolean status);
 
   //  @Query("""
   //    SELECT e

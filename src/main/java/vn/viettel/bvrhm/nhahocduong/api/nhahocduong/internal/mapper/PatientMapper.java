@@ -4,15 +4,19 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
+import vn.viettel.bvrhm.nhahocduong.api.common.internal.mapper.ReferenceMapper;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.data.excel.PatientExcelData;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.PatientDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.Patient;
 
 @Mapper(
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
-    componentModel = MappingConstants.ComponentModel.SPRING)
+    componentModel = MappingConstants.ComponentModel.SPRING,
+    uses = {ReferenceMapper.class}
+)
 public interface PatientMapper {
   Patient toEntity(PatientDTO patientDTO);
+  Patient toEntity(Long id);
 
   PatientDTO toDto(Patient patient);
 

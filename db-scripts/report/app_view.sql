@@ -30,7 +30,7 @@ OR REPLACE VIEW nhahocduong_report.app_view AS(
 		WHERE value->>'problem'='6'
 	)
 	SELECT e.date AS ngay_kham,
-		e.exam_place::character varying AS y_bs_kham,
+		de.title::character varying AS y_bs_kham,
 		o.name AS ten_truong_hoc,
 		e.profile_number AS ma_so,
 		p.full_name AS ho_va_ten,
@@ -178,8 +178,10 @@ OR REPLACE VIEW nhahocduong_report.app_view AS(
 			 SELECT STRING_AGG(teeth, ',')::character varying AS ghi_ro_rang_tram_bit FROM ttr_tram_bit
 			 WHERE id = e.teeth_record_id
 		 ),
+-- 	    TODO: class trong exam khong phai khoi
 		 LEFT(e.class, 1)::integer as khoi
 	FROM nhahocduong.nhahocduong_exam e
+	LEFT JOIN nhahocduong.nhahocduong_dentist de on e.dentist_id = de.id
 	LEFT JOIN nhahocduong.nhahocduong_organization o ON e.organization_id = o.id
 	LEFT JOIN nhahocduong.nhahocduong_patient p ON e.patient_id = p.id
 	LEFT JOIN nhahocduong.nhahocduong_exam_disease ed ON e.id = ed.exam_id

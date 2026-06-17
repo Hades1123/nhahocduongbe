@@ -12,7 +12,7 @@ services:
       - c:/docker/log:/var/log
     environment:
       - "SPRING_PROFILES_ACTIVE=prod-docker"
-      - "DB_URL=jdbc:postgresql://db:5432/nhahocduong?currentSchema=nhahocduong"
+      - "DB_URL=jdbc:postgresql://db:5432/nhahocduong"
       - "DB_USERNAME=nhahocduong"
       - "DB_PASSWORD=nhahocduong"
     networks:
@@ -53,7 +53,7 @@ services:
     networks:
       - nhd
   db:
-    image: postgres:15-alpine3.23
+    image: postgres:17-alpine3.23
     container_name: nhd-db
     ports:
       - "5432:5432"
@@ -63,7 +63,7 @@ services:
       - POSTGRES_PASSWORD=nhahocduong
     volumes:
       - nhd-db-data:/var/lib/postgresql/data
-      - ./db-scripts:/docker-entrypoint-initdb.d
+      - ./db-scripts:/nhahocduong
     networks:
       - nhd
 

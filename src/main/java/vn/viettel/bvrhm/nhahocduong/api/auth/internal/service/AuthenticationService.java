@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import vn.viettel.bvrhm.nhahocduong.api.auth.LoginRequest;
 import vn.viettel.bvrhm.nhahocduong.api.auth.LoginResponse;
 import vn.viettel.bvrhm.nhahocduong.api.auth.exception.InvalidCredentialException;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.constants.enums.Status;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.mapper.UserAuthDetailsMapper;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.object.UserAuthDetails;
 import vn.viettel.bvrhm.nhahocduong.api.auth.internal.repository.UserPasswordRepository;
@@ -96,9 +97,8 @@ public class AuthenticationService implements UserDetailsService {
           String ip = request.getRemoteAddr();
           loginLogRepository.save(vn.viettel.bvrhm.nhahocduong.api.auth.internal.entity.LoginLog.builder()
               .username(username)
-              .ipAddress(ip)
               .loginTime(java.time.LocalDateTime.now())
-              .status("FAILED")
+              .status(Status.FAILED.getValue())
               .build());
       } catch (Exception e) {
           // ignore
@@ -106,17 +106,11 @@ public class AuthenticationService implements UserDetailsService {
   }
 
   private void logSuccessLogin(String username) {
-      try {
-          String ip = request.getRemoteAddr();
-          loginLogRepository.save(vn.viettel.bvrhm.nhahocduong.api.auth.internal.entity.LoginLog.builder()
-              .username(username)
-              .ipAddress(ip)
-              .loginTime(java.time.LocalDateTime.now())
-              .status("SUCCESS")
-              .build());
-      } catch (Exception e) {
-          // ignore
-      }
+        loginLogRepository.save(vn.viettel.bvrhm.nhahocduong.api.auth.internal.entity.LoginLog.builder()
+            .username(username)
+            .loginTime(java.time.LocalDateTime.now())
+            .status(Status.SUCCESS.getValue())
+            .build());
   }
 
   @Override

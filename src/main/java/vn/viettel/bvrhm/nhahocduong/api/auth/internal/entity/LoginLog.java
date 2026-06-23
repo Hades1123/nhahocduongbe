@@ -27,12 +27,11 @@ public class LoginLog {
   @Column(name = "username")
   private String username;
 
-  @Column(name = "ip_address")
-  private String ipAddress;
-
   @Column(name = "login_time")
   private LocalDateTime loginTime;
 
   @Column(name = "status")
-  private String status; // SUCCESS or FAILED
+  private Boolean status; // SUCCESS or FAILED
+  @Column(name = "phone_number")
+  private String phoneNumber;
 }

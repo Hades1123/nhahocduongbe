@@ -92,6 +92,17 @@ public class AuthenticationService implements UserDetailsService {
     return new LoginResponse(token);
   }
 
+  public LoginResponse guestLogin() {
+    Map<String, Object> claims = new LinkedHashMap<>();
+    claims.put("roles", List.of(new RoleDTO("0", "GUEST", "Guest User", true, "Guest Access Role")));
+    claims.put("username", "guest");
+
+    String token = jwtService.makeToken(0L, claims);
+
+    logSuccessLogin("guest");
+    return new LoginResponse(token);
+  }
+
   private void logFailedLogin(String username) {
       try {
           String ip = request.getRemoteAddr();

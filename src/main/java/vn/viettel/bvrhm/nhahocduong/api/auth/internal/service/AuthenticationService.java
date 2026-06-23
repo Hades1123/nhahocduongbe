@@ -22,6 +22,7 @@ import vn.viettel.bvrhm.nhahocduong.api.user.internal.dto.RoleDTO;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.dto.UserDTO;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.service.RoleService;
 import vn.viettel.bvrhm.nhahocduong.api.user.internal.service.UserService;
+import vn.viettel.bvrhm.nhahocduong.api.auth.internal.repository.LoginLogRepository;
 
 @Service
 public class AuthenticationService implements UserDetailsService {
@@ -33,6 +34,9 @@ public class AuthenticationService implements UserDetailsService {
   private UserPasswordRepository userPasswordRepository;
   private PasswordEncoder passwordEncoder;
 
+  @Autowired private LoginLogRepository loginLogRepository;
+  @Autowired private jakarta.servlet.http.HttpServletRequest request;
+
   public LoginResponse authenticate(LoginRequest loginRequest) throws InvalidCredentialException {
     String username = loginRequest.username();
     // TODO expand logic to allow login with email, phoneNumber, security key, etc...
@@ -41,18 +45,30 @@ public class AuthenticationService implements UserDetailsService {
     UserAuthDetails userAuthDetails;
     try {
       userAuthDetails = loadUserByUsername(username);
+      if (userAuthDetails == null) {
+        throw new InvalidCredentialException();
+      }
     } catch (Exception e) {
+      logFailedLogin(username);
+      throw new InvalidCredentialException();
+    }
+
+    // Check status (tài khoản không bị khóa)
+    if (!userAuthDetails.isEnabled()) {
+      logFailedLogin(username);
       throw new InvalidCredentialException();
     }
 
     // Check register status (tài khoản phải được admin duyệt)
     if (userAuthDetails.getRegisterStatus() == null || !userAuthDetails.getRegisterStatus()) {
+      logFailedLogin(username);
       throw new InvalidCredentialException();
     }
 
     // Verify password
     String password = loginRequest.password();
     if (!userService.checkValidUserIdPassword(userAuthDetails.getUserId(), password)) {
+      logFailedLogin(username);
       throw new InvalidCredentialException();
     }
 
@@ -71,7 +87,36 @@ public class AuthenticationService implements UserDetailsService {
 
     String token = jwtService.makeToken(userAuthDetails.getUserId(), claims);
 
+    logSuccessLogin(username);
     return new LoginResponse(token);
+  }
+
+  private void logFailedLogin(String username) {
+      try {
+          String ip = request.getRemoteAddr();
+          loginLogRepository.save(vn.viettel.bvrhm.nhahocduong.api.auth.internal.entity.LoginLog.builder()
+              .username(username)
+              .ipAddress(ip)
+              .loginTime(java.time.LocalDateTime.now())
+              .status("FAILED")
+              .build());
+      } catch (Exception e) {
+          // ignore
+      }
+  }
+
+  private void logSuccessLogin(String username) {
+      try {
+          String ip = request.getRemoteAddr();
+          loginLogRepository.save(vn.viettel.bvrhm.nhahocduong.api.auth.internal.entity.LoginLog.builder()
+              .username(username)
+              .ipAddress(ip)
+              .loginTime(java.time.LocalDateTime.now())
+              .status("SUCCESS")
+              .build());
+      } catch (Exception e) {
+          // ignore
+      }
   }
 
   @Override

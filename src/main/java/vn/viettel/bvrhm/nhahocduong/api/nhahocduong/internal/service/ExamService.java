@@ -45,4 +45,7 @@ public interface ExamService {
 
   /** PATCH: Cập nhật hoặc xóa ảnh trước/sau điều trị (mục 6) */
   ExamDTO updateImages(Long examId, ImageUpdateDTO dto);
+
+  /** DELETE: Xóa ảnh trước hoặc sau điều trị */
+  ExamDTO clearImage(Long examId, String side);
 }

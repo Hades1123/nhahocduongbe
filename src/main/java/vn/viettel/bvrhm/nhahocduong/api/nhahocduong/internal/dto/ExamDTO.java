@@ -39,10 +39,10 @@ public class ExamDTO {
   private String treatmentNote;
 
   // ── Mục 6: Ảnh thực tế trước & sau điều trị ──
-  private String imageBeforeUrl;
-  private LocalDateTime imageBeforeTime;
-  private String imageAfterUrl;
-  private LocalDateTime imageAfterTime;
+  private String imageUpperUrl;
+  private LocalDateTime imageUpperTime;
+  private String imageLowerUrl;
+  private LocalDateTime imageLowerTime;
 
   @JsonIgnore private Boolean status = true;
   //  ExamPlace examPlace;

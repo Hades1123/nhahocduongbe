@@ -92,4 +92,11 @@ public class ExamController {
       @PathVariable Long examId, @RequestBody ImageUpdateDTO dto) {
     return examService.updateImages(examId, dto);
   }
+
+  /** DELETE: Xóa ảnh trước hoặc sau điều trị */
+  @DeleteMapping("/exams/{examId}/images/{side}")
+  public ExamDTO clearImage(
+      @PathVariable Long examId, @PathVariable String side) {
+    return examService.clearImage(examId, side);
+  }
 }

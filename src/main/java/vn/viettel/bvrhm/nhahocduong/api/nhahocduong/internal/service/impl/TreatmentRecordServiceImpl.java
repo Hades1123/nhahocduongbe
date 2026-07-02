@@ -48,7 +48,7 @@ public class TreatmentRecordServiceImpl implements TreatmentRecordService {
             .filter(
                 id ->
                     treatmentRecords.stream()
-                        .anyMatch(upsertRecord -> !id.equals(upsertRecord.getId())))
+                        .noneMatch(upsertRecord -> id.equals(upsertRecord.getId())))
             .toList();
     List<TreatmentRecord> treatmentRecordsNotIncluded =
         treatmentRecordRepository.findByIdIsIn(idOfRecordsNotIncluded);

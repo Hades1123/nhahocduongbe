@@ -285,13 +285,47 @@ public class ExamServiceImpl implements ExamService {
             new ResponseStatusException(
                 HttpStatus.NOT_FOUND, ResponseMessage.EXAM_NOT_FOUND_WITH_ID + examId));
 
-    // Before image: null url = xóa ảnh
-    exam.setImageBeforeUrl(dto.getImageBeforeUrl());
-    exam.setImageBeforeTime(dto.getImageBeforeTime());
+    // Only update upper-image fields when explicitly provided in the request
+    if (dto.getImageUpperUrl() != null) {
+      exam.setImageUpperUrl(dto.getImageUpperUrl());
+    }
+    if (dto.getImageUpperTime() != null) {
+      exam.setImageUpperTime(dto.getImageUpperTime());
+    }
 
-    // After image: null url = xóa ảnh
-    exam.setImageAfterUrl(dto.getImageAfterUrl());
-    exam.setImageAfterTime(dto.getImageAfterTime());
+    // Only update lower-image fields when explicitly provided in the request
+    if (dto.getImageLowerUrl() != null) {
+      exam.setImageLowerUrl(dto.getImageLowerUrl());
+    }
+    if (dto.getImageLowerTime() != null) {
+      exam.setImageLowerTime(dto.getImageLowerTime());
+    }
+
+    Exam saved = examRepository.save(exam);
+    return examMapper.toDto(saved);
+  }
+
+  /**
+   * Explicitly clear a specific image (before or after) for an exam.
+   * This is needed because updateImages now skips null fields to prevent
+   * cross-image data loss, so deletion requires a dedicated method.
+   */
+  @Override
+  @Transactional
+  public ExamDTO clearImage(Long examId, String side) {
+    Exam exam = examRepository
+        .findById(examId)
+        .orElseThrow(() ->
+            new ResponseStatusException(
+                HttpStatus.NOT_FOUND, ResponseMessage.EXAM_NOT_FOUND_WITH_ID + examId));
+
+    if ("upper".equalsIgnoreCase(side)) {
+      exam.setImageUpperUrl(null);
+      exam.setImageUpperTime(null);
+    } else if ("lower".equalsIgnoreCase(side)) {
+      exam.setImageLowerUrl(null);
+      exam.setImageLowerTime(null);
+    }
 
     Exam saved = examRepository.save(exam);
     return examMapper.toDto(saved);

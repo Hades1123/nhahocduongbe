@@ -94,17 +94,17 @@ public class Exam extends BaseEntity {
   private String treatmentNote;
 
   // ── Mục 6: Ảnh thực tế trước & sau điều trị ──
-  @Column(name = "image_before_url")
-  private String imageBeforeUrl;
+  @Column(name = "image_upper_url")
+  private String imageUpperUrl;
 
-  @Column(name = "image_before_time")
-  private LocalDateTime imageBeforeTime;
+  @Column(name = "image_upper_time")
+  private LocalDateTime imageUpperTime;
 
-  @Column(name = "image_after_url")
-  private String imageAfterUrl;
+  @Column(name = "image_lower_url")
+  private String imageLowerUrl;
 
-  @Column(name = "image_after_time")
-  private LocalDateTime imageAfterTime;
+  @Column(name = "image_lower_time")
+  private LocalDateTime imageLowerTime;
 
   //  @SuppressWarnings("JpaAttributeTypeInspection")
   //  @JdbcTypeCode(SqlTypes.JSON)

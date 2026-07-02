@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ImageUpdateDTO implements Serializable {
-  private String imageBeforeUrl;
-  private LocalDateTime imageBeforeTime;
-  private String imageAfterUrl;
-  private LocalDateTime imageAfterTime;
+  private String imageUpperUrl;
+  private LocalDateTime imageUpperTime;
+  private String imageLowerUrl;
+  private LocalDateTime imageLowerTime;
 }

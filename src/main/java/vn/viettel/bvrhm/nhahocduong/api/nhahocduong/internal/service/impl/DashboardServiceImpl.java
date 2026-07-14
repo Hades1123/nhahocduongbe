@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.springframework.cache.annotation.Cacheable;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.StudentCountBySchoolDTO;
+import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.dto.YearlyStudentCountDTO;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.entity.*;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.repository.*;
 import vn.viettel.bvrhm.nhahocduong.api.nhahocduong.internal.service.DashboardService;
@@ -25,16 +27,15 @@ public class DashboardServiceImpl implements DashboardService {
     @Autowired
     private ExamRepository examRepository;
 
+    @Autowired
+    private StudentClassAffiliationRepository affiliationRepository;
+
     @Override
     public Map<String, Object> getCampaignStats() {
         long totalCampaigns = campaignRepository.count();
-        long activeCampaigns = campaignRepository.findAllByStatusOrderByIdDesc(true).size();
+        long activeCampaigns = campaignRepository.countByStatus(true);
         long totalStudents = patientRepository.count();
-        
-        List<Exam> exams = examRepository.findAll();
-        long totalExamined = exams.stream()
-                .filter(e -> e.getStatus() == null || e.getStatus())
-                .count();
+        long totalExamined = examRepository.countTotalExamined();
 
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalCampaigns", totalCampaigns);
@@ -49,9 +50,7 @@ public class DashboardServiceImpl implements DashboardService {
     public Map<String, Object> getStats() {
         Map<String, Object> campaignStats = getCampaignStats();
         
-        List<Exam> allExams = examRepository.findAll().stream()
-                .filter(e -> e.getStatus() == null || e.getStatus())
-                .collect(Collectors.toList());
+        List<Exam> allExams = examRepository.findAllActiveWithAssociations();
 
         // 1. Thống kê tỷ lệ sâu răng theo trường/lớp
         List<Map<String, Object>> cariesBySchoolClass = calculateCariesBySchoolClass(allExams);
@@ -199,5 +198,28 @@ public class DashboardServiceImpl implements DashboardService {
         }
         return tr.getRecord().values().stream()
                 .anyMatch(cond -> cond != null && cond.getProblem() == ToothProblem.CARIES);
+    }
+
+    // ── Mới: Thống kê sĩ số theo năm học ──
+
+    @Override
+    public List<StudentCountBySchoolDTO> getStudentCountByYear(Long academicYearId) {
+        List<Object[]> rows = affiliationRepository.countStudentsBySchoolAndGrade(academicYearId);
+        return rows.stream()
+            .map(r -> new StudentCountBySchoolDTO(
+                (String) r[0],
+                (String) r[1],
+                ((Number) r[2]).longValue()))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<YearlyStudentCountDTO> getStudentCountHistory() {
+        List<Object[]> rows = affiliationRepository.countStudentsByYear();
+        return rows.stream()
+            .map(r -> new YearlyStudentCountDTO(
+                (String) r[0],
+                ((Number) r[1]).longValue()))
+            .collect(Collectors.toList());
     }
 }

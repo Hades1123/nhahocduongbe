@@ -3,9 +3,9 @@ spring:
     exclude:
       - org.springframework.modulith.runtime.autoconfigure.SpringModulithRuntimeAutoConfiguration
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/nhahocduong}
-    username: ${DB_USERNAME:nhahocduong}
-    password: ${DB_PASSWORD:nhahocduong}
+    url: jdbc:postgresql://localhost:5432/nhahocduong
+    username: nhahocduong
+    password: nhahocduong
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5       # Increased from 1 — was serializing all DB requests!
@@ -15,12 +15,10 @@ spring:
 
   data:
     redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:password}
-      username: default
-      ssl:
-        enabled: true
+      host: localhost
+      port: 6379
+      password: password
+
   cache:
     type: redis
     redis:
